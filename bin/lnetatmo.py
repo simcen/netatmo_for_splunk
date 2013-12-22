@@ -9,14 +9,11 @@
 # PythonAPI Netatmo REST data access
 # coding=utf-8
 
-import sys
-#from sys import version_info
+from sys import version_info
 import json, time
 
 # HTTP libraries depends upon Python 2 or 3
-
-#if version_info.major == 3 :
-if sys.version_info[0] == 3 :
+if version_info.major == 3 :
     import urllib.parse, urllib.request
 else:
     from urllib import urlencode
@@ -32,10 +29,10 @@ _GETMEASURE_REQ = _BASE_URL + "api/getmeasure"
 
 # User-based specs
 
-_CLIENT_ID     = "527e60b41b77595e7a647d86"          # From Netatmo app registration
-_CLIENT_SECRET = "ygqQxYRbmrf8eLiTpwK23Lz79"         #   '     '
-_USERNAME      = "meno@atremar.com"
-_PASSWORD      = "61Hubel7"
+_CLIENT_ID     = "<your client_id>"                         # From Netatmo app registration
+_CLIENT_SECRET = "<your client_secret>"                     #   '     '
+_USERNAME      = "<netatmo username>"
+_PASSWORD      = "<netatmo user password>"
 
 class ClientAuth:
     "Request authentication and keep access token available through token method. Renew it automatically if necessary"
@@ -80,7 +77,6 @@ class ClientAuth:
             self.expiration = int(resp['expire_in'] + time.time())
 
         return self._accessToken
-
 
 class User:
     "Access to user account information"
@@ -217,8 +213,7 @@ class DeviceList:
 # Utilities routines
 
 def postRequest(url, params):
-#    if version_info.major == 3:
-    if sys.version_info[0] == 3:
+    if version_info.major == 3:
         req = urllib.request.Request(url)
         req.add_header("Content-Type","application/x-www-form-urlencoded;charset=utf-8")
         params = urllib.parse.urlencode(params).encode('utf-8')
@@ -262,15 +257,15 @@ def getStationMinMaxTH(station=None, module=None):
 if __name__ == "__main__":
 
     from sys import exit, stderr
-
+    
     if not _CLIENT_ID or not _CLIENT_SECRET or not _USERNAME or not _PASSWORD :
            stderr.write("Missing arguments to check lnetatmo.py")
            exit(1)
-
+    
     authorization = ClientAuth()                # Test authentication method
     user = User(authorization)                  # Test GETUSER
     devList = DeviceList(authorization)         # Test DEVICELIST
     devList.MinMaxTH()                          # Test GETMEASURE
-
+    
     # If we reach this line, all is OK
     exit(0)
