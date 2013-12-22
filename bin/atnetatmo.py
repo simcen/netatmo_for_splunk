@@ -12,6 +12,9 @@ import ConfigParser
 import hashlib
 import base64
 import uuid
+import logging as logger
+
+
 
 # HTTP libraries depends upon Python 2 or 3
 if sys.version_info[0] == 3 :
@@ -20,26 +23,32 @@ else:
     from urllib import urlencode
     import urllib2
 
-# Read configuration files
+logger.basicConfig(level=logger.DEBUG, format='%(asctime)s %(levelname)s %(message)s',
+                   filename=os.path.join(os.environ['SPLUNK_HOME'],'var','log','splunk','netatmo.log'),
+                   filemode='a')
 
+# Read configuration files
 try:
     parser = ConfigParser.SafeConfigParser()
-    # TODO: relative paths when executed by Splunk
-    conf1 = '/opt/splunk/etc/apps/netatmo/default/netatmo.conf'
-    conf2 = '/opt/splunk/etc/apps/netatmo/local/netatmo.conf'
+    conf_base = os.path.abspath(os.path.dirname(sys.argv[0])+"/..")
+    logger.debug("The base path is: %s" % conf_base)
+    conf1 = conf_base+'/default/netatmo.conf'
+    conf2 = conf_base+'/local/netatmo.conf'
 
     # file in ../local has precedence
+    conf=None
     if os.access(conf1, os.R_OK):
        conf = conf1
     if os.access(conf2, os.R_OK):
        conf = conf2
+    logger.debug("The selected conf is: %s" % conf)
     parser.read(conf)
+    if logger.getLevelName == "DEBUG" :
 
-#    for stanza in [ 'auth', 'api' ]:
-#        print '%s stanza exists: %s' % (stanza, parser.has_section(stanza))
-#        for candidate in [ 'username', 'password', 'client-id', 'client-secret' ]:
-#            print '%s.%-12s  : %s' % (stanza, candidate, parser.has_option(stanza, candidate))
-#        print
+        for stanza in [ 'auth', 'api' ]:
+            logger.debug('%s stanza exists: %s' % (stanza, parser.has_section(stanza)))
+            for candidate in [ 'username', 'password', 'client-id', 'client-secret' ]:
+                logger.debug('%s.%-12s  : %s' % (stanza, candidate, parser.has_option(stanza, candidate)))
 
     if parser.has_section('auth'):
         confauth = dict(parser.items('auth'))
@@ -48,6 +57,7 @@ try:
 
 except ConfigParser.ParsingError, err:
     print 'Could not parse:', err
+    logger.error(err)
 
 # User specs
 _CLIENT_ID     = confauth.get("client-id")
@@ -117,9 +127,10 @@ class User:
                 }
         resp = postRequest(_GETUSER_REQ, postParams)
         self.rawData = resp['body']
-        self.id = self.rawData['_id']
+        self.user_id = self.rawData['_id']
         self.devList = self.rawData['devices']
-        self.ownerMail = self.rawData['mail']
+        self.friendDevList = self.rawData['friend_devices']
+        self.mail = self.rawData['mail']
 
 
 class DeviceList:
@@ -131,16 +142,48 @@ class DeviceList:
                 "access_token" : self.getAuthToken
                 }
         self.resp = postRequest(_DEVICELIST_REQ, postParams)
+        self.rawData = self.resp['body']
+        logger.debug("Got a response %s." % self.resp['body'])
+        self.stations = {}
+        for d in self.rawData['devices'] : self.stations[d['_id']] = d
+        self.modules = {}
+        for m in self.rawData['modules'] : self.modules[m['_id']] = m
+
 
     def getAll(self):
         response = self.resp
         return response if len(response) else None
 
 
+    def techdata2splunk(self): 
+        lastD = {}
+        for i,station in self.stations.items():
+            #logger.debug("Station is: %s" % s)
+        #for station in self.stations:
+            logger.debug("Station is: %s" % station)
+            ds = station['last_data_store']
+            logger.debug("Last Data array is: %s" % ds)
+            ds = station['last_data_store'][station['_id']]
+            lastD[station['_id']] = {"when":ds['K'],"temperature":ds['a'],"pressure":ds['e'],"noise":ds['S'],"co2":ds['h'],"humidity":ds['b'],"station":station['station_name'],"module_name":station["module_name"],"_id":station['_id'],"station_id":station['_id']}
+            for m in station['modules']:
+                ds = station['last_data_store'][m]
+                lastD[m] = {"when":ds['K'],"temperature":ds['a'],"humidity":ds['b'],"station":station['station_name'],"module_name":self.modules[m]['module_name'],"_id":m,"station_id":station['_id']}
+        return lastD if len(lastD) else None
+
+
+
+
+
+    def metadata2splunk(self):
+        #TODO
+        return None
+
+
 # Utilities
 
 def postRequest(url, params):
-
+      
+    logger.debug("Posting to url: %s with params: %s" % (url,params))
     if sys.version_info[0] == 3:
         req = urllib.request.Request(url)
         req.add_header("Content-Type","application/x-www-form-urlencoded;charset=utf-8")
