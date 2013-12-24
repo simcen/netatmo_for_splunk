@@ -26,7 +26,6 @@
       </populatingSearch>
     </input>
     <input type="time" searchWhenChanged="true">
-      <label>Select a time:</label>
       <default>Last 24 hours</default>
     </input>
   </fieldset>
