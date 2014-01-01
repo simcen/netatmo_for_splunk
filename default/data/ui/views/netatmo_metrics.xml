@@ -1,0 +1,121 @@
+<form>
+  <label>Netatmo Metrics Viewer</label>
+  <fieldset autoRun="true" submitButton="false">
+    <input type="dropdown" token="station" searchWhenChanged="true">
+      <label>Select a Station:</label>
+      <default>*</default>
+      <choice value="*">All</choice>
+      <populatingSearch fieldForValue="station" fieldForLabel="station">
+        <![CDATA[ | inputlookup netatmo_stations | fields station ]]>
+      </populatingSearch>
+    </input>
+    <input type="dropdown" token="module_type" searchWhenChanged="true">
+      <label>Select a Module type:</label>
+      <default>*</default>
+      <choice value="*">All</choice>
+      <populatingSearch fieldForValue="module_type" fieldForLabel="module_type">
+        <![CDATA[ | inputlookup netatmo_stations | search station="$station$" | fields module_type ]]>
+      </populatingSearch>
+    </input>
+    <input type="dropdown" token="module_name" searchWhenChanged="true">
+      <label>Select a Module:</label>
+      <default>*</default>
+      <choice value="*">All</choice>
+      <populatingSearch fieldForValue="module_name" fieldForLabel="module_name">
+        <![CDATA[ | inputlookup netatmo_stations | search station="$station$" module_type="$module_type$" | fields module_name ]]>
+      </populatingSearch>
+    </input>
+    <input type="time" searchWhenChanged="true">
+      <default>Last 24 hours</default>
+    </input>
+  </fieldset>
+  <row>
+    <chart>
+      <title>Temperature</title>
+      <searchString>index="netatmo" station="$station$" module_type="$module_type$" module_name="$module_name$" | timechart avg(temperature) by device</searchString>
+      <option name="charting.axisTitleX.visibility">visible</option>
+      <option name="charting.axisTitleY.visibility">visible</option>
+      <option name="charting.axisX.scale">linear</option>
+      <option name="charting.axisY.scale">linear</option>
+      <option name="charting.chart">area</option>
+      <option name="charting.chart.nullValueMode">zero</option>
+      <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+      <option name="charting.chart.stackMode">default</option>
+      <option name="charting.chart.style">shiny</option>
+      <option name="charting.drilldown">all</option>
+      <option name="charting.layout.splitSeries">0</option>
+      <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+      <option name="charting.legend.placement">right</option>
+    </chart>
+    <chart>
+      <title>Humidity</title>
+      <searchString>index="netatmo" station="$station$" module_type="$module_type$" module_name="$module_name$" | timechart avg(humidity) by device</searchString>
+      <option name="charting.axisTitleX.visibility">visible</option>
+      <option name="charting.axisTitleY.visibility">visible</option>
+      <option name="charting.axisX.scale">linear</option>
+      <option name="charting.axisY.scale">linear</option>
+      <option name="charting.chart">area</option>
+      <option name="charting.chart.nullValueMode">zero</option>
+      <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+      <option name="charting.chart.stackMode">default</option>
+      <option name="charting.chart.style">shiny</option>
+      <option name="charting.drilldown">all</option>
+      <option name="charting.layout.splitSeries">0</option>
+      <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+      <option name="charting.legend.placement">right</option>
+    </chart>
+  </row>
+  <row>
+    <chart>
+      <title>CO2</title>
+      <searchString>index="netatmo" station="$station$" module_type="$module_type$" module_name="$module_name$" | timechart avg(co2) by device</searchString>
+      <option name="charting.axisTitleX.visibility">visible</option>
+      <option name="charting.axisTitleY.visibility">visible</option>
+      <option name="charting.axisX.scale">linear</option>
+      <option name="charting.axisY.scale">linear</option>
+      <option name="charting.chart">area</option>
+      <option name="charting.chart.nullValueMode">zero</option>
+      <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+      <option name="charting.chart.stackMode">default</option>
+      <option name="charting.chart.style">shiny</option>
+      <option name="charting.drilldown">all</option>
+      <option name="charting.layout.splitSeries">0</option>
+      <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+      <option name="charting.legend.placement">right</option>
+    </chart>
+    <chart>
+      <title>Pressure</title>
+      <searchString>index="netatmo" station="$station$" module_type="$module_type$" module_name="$module_name$" | timechart avg(pressure) by device</searchString>
+      <option name="charting.axisTitleX.visibility">visible</option>
+      <option name="charting.axisTitleY.visibility">visible</option>
+      <option name="charting.axisX.scale">linear</option>
+      <option name="charting.axisY.scale">linear</option>
+      <option name="charting.chart">area</option>
+      <option name="charting.chart.nullValueMode">zero</option>
+      <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+      <option name="charting.chart.stackMode">default</option>
+      <option name="charting.chart.style">shiny</option>
+      <option name="charting.drilldown">all</option>
+      <option name="charting.layout.splitSeries">0</option>
+      <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+      <option name="charting.legend.placement">right</option>
+    </chart>
+    <chart>
+      <title>Noise</title>
+      <searchString>index="netatmo" station="$station$" module_type="$module_type$" module_name="$module_name$" | timechart avg(noise) by device</searchString>
+      <option name="charting.axisTitleX.visibility">visible</option>
+      <option name="charting.axisTitleY.visibility">visible</option>
+      <option name="charting.axisX.scale">linear</option>
+      <option name="charting.axisY.scale">linear</option>
+      <option name="charting.chart">area</option>
+      <option name="charting.chart.nullValueMode">zero</option>
+      <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+      <option name="charting.chart.stackMode">default</option>
+      <option name="charting.chart.style">shiny</option>
+      <option name="charting.drilldown">all</option>
+      <option name="charting.layout.splitSeries">0</option>
+      <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+      <option name="charting.legend.placement">right</option>
+    </chart>
+  </row>
+</form>
