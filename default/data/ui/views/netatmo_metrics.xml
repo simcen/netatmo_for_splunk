@@ -9,12 +9,12 @@
         <![CDATA[ | inputlookup netatmo_stations | fields station ]]>
       </populatingSearch>
     </input>
-    <input type="dropdown" token="module_type" searchWhenChanged="true">
+    <input type="dropdown" token="type" searchWhenChanged="true">
       <label>Select a Module type:</label>
       <default>*</default>
       <choice value="*">All</choice>
-      <populatingSearch fieldForValue="module_type" fieldForLabel="module_type">
-        <![CDATA[ | inputlookup netatmo_stations | search station="$station$" | fields module_type ]]>
+      <populatingSearch fieldForValue="type" fieldForLabel="type_label">
+        <![CDATA[ | inputlookup netatmo_stations | search station="$station$" | fields type,type_label ]]>
       </populatingSearch>
     </input>
     <input type="dropdown" token="module_name" searchWhenChanged="true">
@@ -22,7 +22,7 @@
       <default>*</default>
       <choice value="*">All</choice>
       <populatingSearch fieldForValue="module_name" fieldForLabel="module_name">
-        <![CDATA[ | inputlookup netatmo_stations | search station="$station$" module_type="$module_type$" | fields module_name ]]>
+        <![CDATA[ | inputlookup netatmo_stations | search station="$station$" type="$type$" | fields module_name ]]>
       </populatingSearch>
     </input>
     <input type="time" searchWhenChanged="true">
@@ -32,7 +32,7 @@
   <row>
     <chart>
       <title>Temperature</title>
-      <searchString>index="netatmo" station="$station$" module_type="$module_type$" module_name="$module_name$" | timechart avg(temperature) by device</searchString>
+      <searchString>index="netatmo" station="$station$" type="$type$" module_name="$module_name$" | timechart avg(temperature) by device</searchString>
       <option name="charting.axisTitleX.visibility">visible</option>
       <option name="charting.axisTitleY.visibility">visible</option>
       <option name="charting.axisX.scale">linear</option>
@@ -49,7 +49,7 @@
     </chart>
     <chart>
       <title>Humidity</title>
-      <searchString>index="netatmo" station="$station$" module_type="$module_type$" module_name="$module_name$" | timechart avg(humidity) by device</searchString>
+      <searchString>index="netatmo" station="$station$" type="$type$" module_name="$module_name$" | timechart avg(humidity) by device</searchString>
       <option name="charting.axisTitleX.visibility">visible</option>
       <option name="charting.axisTitleY.visibility">visible</option>
       <option name="charting.axisX.scale">linear</option>
@@ -68,7 +68,7 @@
   <row>
     <chart>
       <title>CO2</title>
-      <searchString>index="netatmo" station="$station$" module_type="$module_type$" module_name="$module_name$" | timechart avg(co2) by device</searchString>
+      <searchString>index="netatmo" station="$station$" type="$type$" module_name="$module_name$" | timechart avg(co2) by device</searchString>
       <option name="charting.axisTitleX.visibility">visible</option>
       <option name="charting.axisTitleY.visibility">visible</option>
       <option name="charting.axisX.scale">linear</option>
@@ -85,7 +85,7 @@
     </chart>
     <chart>
       <title>Pressure</title>
-      <searchString>index="netatmo" station="$station$" module_type="$module_type$" module_name="$module_name$" | timechart avg(pressure) by device</searchString>
+      <searchString>index="netatmo" station="$station$" type="$type$" module_name="$module_name$" | timechart avg(pressure) by device</searchString>
       <option name="charting.axisTitleX.visibility">visible</option>
       <option name="charting.axisTitleY.visibility">visible</option>
       <option name="charting.axisX.scale">linear</option>
@@ -102,7 +102,7 @@
     </chart>
     <chart>
       <title>Noise</title>
-      <searchString>index="netatmo" station="$station$" module_type="$module_type$" module_name="$module_name$" | timechart avg(noise) by device</searchString>
+      <searchString>index="netatmo" station="$station$" type="$type$" module_name="$module_name$" | timechart avg(noise) by device</searchString>
       <option name="charting.axisTitleX.visibility">visible</option>
       <option name="charting.axisTitleY.visibility">visible</option>
       <option name="charting.axisX.scale">linear</option>

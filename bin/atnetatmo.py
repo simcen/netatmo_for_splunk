@@ -174,15 +174,15 @@ class DeviceList:
             ds = station['last_data_store']
             logger.debug("Last Data array is: %s" % ds)
             ds = station['last_data_store'][station['_id']]
-            lastD[station['_id']] = {"when":ds['K'],"temperature":ds['a'],"pressure":ds['e'],"noise":ds['S'],"co2":ds['h'],"humidity":ds['b'],"station":station['station_name'],"module_name":station["module_name"],"_id":station['_id'],"station_id":station['_id']}
+            lastD[station['_id']] = {"when":ds['K'],"temperature":ds['a'],"pressure":ds['e'],"noise":ds['S'],"co2":ds['h'],"humidity":ds['b'],"station":station['station_name'],"module_name":station["module_name"],"_id":station['_id'],"station_id":station['_id'],"type":station['type']}
             for m in station['modules']:
                 ds = station['last_data_store'][m]
                 #Indor modules have a value for co2 (h)
                 if 'h' in ds:
-                    lastD[m] = {"when":ds['K'],"temperature":ds['a'],"humidity":ds['b'],"co2":ds['h'],"station":station['station_name'],"module_name":self.modules[m]['module_name'],"_id":m,"station_id":station['_id']}
+                    lastD[m] = {"when":ds['K'],"temperature":ds['a'],"humidity":ds['b'],"co2":ds['h'],"station":station['station_name'],"module_name":self.modules[m]['module_name'],"_id":m,"station_id":station['_id'],"type":self.modules[m]['type']}
                 #Outdoor modules do not
                 else:
-                    lastD[m] = {"when":ds['K'],"temperature":ds['a'],"humidity":ds['b'],"station":station['station_name'],"module_name":self.modules[m]['module_name'],"_id":m,"station_id":station['_id']}
+                    lastD[m] = {"when":ds['K'],"temperature":ds['a'],"humidity":ds['b'],"station":station['station_name'],"module_name":self.modules[m]['module_name'],"_id":m,"station_id":station['_id'],"type":self.modules[m]['type']}
             
         return lastD if len(lastD) else None
 
