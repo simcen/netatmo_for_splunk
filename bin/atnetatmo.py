@@ -4,6 +4,16 @@ The response is handled by a wrapper script (getdata.py) that prepares the JSON 
 License: Public Domain CC0
 Inspired by https://github.com/philippelt/netatmo-api-python...  cleaned all I do not need.
 Author: meno@atremar.com, 10.10.2013
+
+Infos that go into the change history:
+- newest entry @ the beginning
+- who changed
+- what was changed
+
+History
+2013.10.10  meno@atremar.com - Initial Version
+2014.01.01  sinloft@gmail.com - Enabled reading the co2 values of additional indoor modules
+
 """
 
 import os, sys
@@ -167,7 +177,13 @@ class DeviceList:
             lastD[station['_id']] = {"when":ds['K'],"temperature":ds['a'],"pressure":ds['e'],"noise":ds['S'],"co2":ds['h'],"humidity":ds['b'],"station":station['station_name'],"module_name":station["module_name"],"_id":station['_id'],"station_id":station['_id']}
             for m in station['modules']:
                 ds = station['last_data_store'][m]
-                lastD[m] = {"when":ds['K'],"temperature":ds['a'],"humidity":ds['b'],"station":station['station_name'],"module_name":self.modules[m]['module_name'],"_id":m,"station_id":station['_id']}
+                #Indor modules have a value for co2 (h)
+                if 'h' in ds:
+                    lastD[m] = {"when":ds['K'],"temperature":ds['a'],"humidity":ds['b'],"co2":ds['h'],"station":station['station_name'],"module_name":self.modules[m]['module_name'],"_id":m,"station_id":station['_id']}
+                #Outdoor modules do not
+                else:
+                    lastD[m] = {"when":ds['K'],"temperature":ds['a'],"humidity":ds['b'],"station":station['station_name'],"module_name":self.modules[m]['module_name'],"_id":m,"station_id":station['_id']}
+            
         return lastD if len(lastD) else None
 
 
