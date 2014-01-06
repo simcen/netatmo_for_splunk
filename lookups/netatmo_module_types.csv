@@ -1,0 +1,4 @@
+type,type_label
+NAMain,"Base Station"
+NAModule1,"Outdoor Module"
+NAModule4, "Indoor Module"
