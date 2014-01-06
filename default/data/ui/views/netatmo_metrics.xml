@@ -33,6 +33,7 @@
     <chart>
       <title>Temperature</title>
       <searchString>index="netatmo" station="$station$" type="$type$" module_name="$module_name$" | timechart avg(temperature) by device</searchString>
+      <option name="charting.axisTitleY.text">°C</option>
       <option name="charting.axisTitleX.visibility">collapsed</option>
       <option name="charting.axisTitleY.visibility">visible</option>
       <option name="charting.axisX.scale">linear</option>
