@@ -1,6 +1,6 @@
 <form>
   <label>Netatmo Metrics Viewer</label>
-  <fieldset autoRun="true" submitButton="false">
+  <fieldset autoRun="true" submitButton="true">
     <input type="dropdown" token="station" searchWhenChanged="true">
       <label>Select a Station:</label>
       <default>*</default>
@@ -33,7 +33,8 @@
     <chart>
       <title>Temperature</title>
       <searchString>index="netatmo" station="$station$" module_type="$module_type$" module_name="$module_name$" | timechart avg(temperature) by device</searchString>
-      <option name="charting.axisTitleX.visibility">visible</option>
+      <option name="charting.axisTitleY.text">°C</option>
+      <option name="charting.axisTitleX.visibility">collapsed</option>
       <option name="charting.axisTitleY.visibility">visible</option>
       <option name="charting.axisX.scale">linear</option>
       <option name="charting.axisY.scale">linear</option>
@@ -50,7 +51,8 @@
     <chart>
       <title>Humidity</title>
       <searchString>index="netatmo" station="$station$" module_type="$module_type$" module_name="$module_name$" | timechart avg(humidity) by device</searchString>
-      <option name="charting.axisTitleX.visibility">visible</option>
+      <option name="charting.axisTitleY.text">%</option>
+      <option name="charting.axisTitleX.visibility">collapsed</option>
       <option name="charting.axisTitleY.visibility">visible</option>
       <option name="charting.axisX.scale">linear</option>
       <option name="charting.axisY.scale">linear</option>
@@ -69,7 +71,8 @@
     <chart>
       <title>CO2</title>
       <searchString>index="netatmo" station="$station$" module_type="$module_type$" module_name="$module_name$" | timechart avg(co2) by device</searchString>
-      <option name="charting.axisTitleX.visibility">visible</option>
+      <option name="charting.axisTitleY.text">ppm</option>
+      <option name="charting.axisTitleX.visibility">collapsed</option>
       <option name="charting.axisTitleY.visibility">visible</option>
       <option name="charting.axisX.scale">linear</option>
       <option name="charting.axisY.scale">linear</option>
@@ -86,7 +89,8 @@
     <chart>
       <title>Pressure</title>
       <searchString>index="netatmo" station="$station$" module_type="$module_type$" module_name="$module_name$" | timechart avg(pressure) by device</searchString>
-      <option name="charting.axisTitleX.visibility">visible</option>
+      <option name="charting.axisTitleY.text">mbar</option>
+      <option name="charting.axisTitleX.visibility">collapsed</option>
       <option name="charting.axisTitleY.visibility">visible</option>
       <option name="charting.axisX.scale">linear</option>
       <option name="charting.axisY.scale">linear</option>
@@ -103,7 +107,8 @@
     <chart>
       <title>Noise</title>
       <searchString>index="netatmo" station="$station$" module_type="$module_type$" module_name="$module_name$" | timechart avg(noise) by device</searchString>
-      <option name="charting.axisTitleX.visibility">visible</option>
+      <option name="charting.axisTitleY.text">dB</option>
+      <option name="charting.axisTitleX.visibility">collapsed</option>
       <option name="charting.axisTitleY.visibility">visible</option>
       <option name="charting.axisX.scale">linear</option>
       <option name="charting.axisY.scale">linear</option>
