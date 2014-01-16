@@ -94,6 +94,8 @@
       <option name="charting.axisTitleY.visibility">visible</option>
       <option name="charting.axisX.scale">linear</option>
       <option name="charting.axisY.scale">linear</option>
+      <option name="charting.axisY.maximumNumber">1050</option>
+      <option name="charting.axisY.minimumNumber">950</option>
       <option name="charting.chart">area</option>
       <option name="charting.chart.nullValueMode">zero</option>
       <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
