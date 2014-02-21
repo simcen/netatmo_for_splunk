@@ -18,7 +18,7 @@
       </div>
       <div id="amcharts"
         class="splunk-view"
-        data-require="app/splunk6dev/amchartview"
+        data-require="app/netatmo/amchartview"
         data-options='{
         "managerid": "amChartSearch",
         "categoryField": "device",

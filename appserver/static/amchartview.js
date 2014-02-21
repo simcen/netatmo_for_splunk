@@ -3,12 +3,12 @@ require.config({
         "app": "../app"
     },
     shim: {
-        "app/splunk6dev/amcharts/amcharts": {
+        "app/netatmo/amcharts/amcharts": {
             deps: [],
             exports: "AmCharts"
         },
-        "app/splunk6dev/amcharts/serial": {
-            deps: ["app/splunk6dev/amcharts/amcharts"],
+        "app/netatmo/amcharts/serial": {
+            deps: ["app/netatmo/amcharts/amcharts"],
             exports: "AmCharts.AmSerialChart"
         },
     }
@@ -20,8 +20,8 @@ define(function(require, exports, module) {
     var $ = require('jquery');
     var mvc = require('splunkjs/mvc');
     var SimpleSplunkView = require('splunkjs/mvc/simplesplunkview');
-    var AmCharts = require('app/splunk6dev/amcharts/amcharts');
-  	require('app/splunk6dev/amcharts/serial');
+    var AmCharts = require('app/netatmo/amcharts/amcharts');
+  	require('app/netatmo/amcharts/serial');
 
 	var AmChartView = SimpleSplunkView.extend({
         className: "amchartview",
