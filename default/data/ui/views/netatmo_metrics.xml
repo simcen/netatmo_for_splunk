@@ -32,14 +32,15 @@
   <row>
     <chart>
       <title>Temperature</title>
-      <searchString>index="netatmo" station="$station$" type="$type$" module_name="$module_name$" | timechart avg(temperature) by device</searchString>
+      <!--<searchString>index="netatmo" station="$station$" type="$type$" module_name="$module_name$" | timechart avg(temperature) by device</searchString>-->
+      <searchString>| pivot Netatmo Netatmo_Events avg(temperature) AS "Average of temperature" SPLITROW _time AS "_time" PERIOD auto SPLITCOL device FILTER module_name is "$module_name$" FILTER station is "$station$" FILTER type_label is * SORT 0 _time NUMCOLS 100</searchString>
       <option name="charting.axisTitleY.text">°C</option>
       <option name="charting.axisTitleX.visibility">collapsed</option>
       <option name="charting.axisTitleY.visibility">visible</option>
       <option name="charting.axisX.scale">linear</option>
       <option name="charting.axisY.scale">linear</option>
       <option name="charting.chart">area</option>
-      <option name="charting.chart.nullValueMode">zero</option>
+      <option name="charting.chart.nullValueMode">connect</option>
       <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
       <option name="charting.chart.stackMode">default</option>
       <option name="charting.chart.style">shiny</option>

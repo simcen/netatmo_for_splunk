@@ -89,7 +89,6 @@ define(function(require, exports, module) {
 			        "title": "Unterschied",
 			        "type": "column",
 			        "valueField": "difference",
-			        "fillColors": "#cc3333",
 			        "lineColor": "#cc3333",
 			        "fillColorsField": this.settings.get('colorField'),
 			    }],

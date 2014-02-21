@@ -1,0 +1,317 @@
+{
+    "objects": [
+        {
+            "comment": "", 
+            "constraints": [
+                {
+                    "search": "index=netatmo sourcetype=netatmo"
+                }
+            ], 
+            "objectName": "Netatmo_Events", 
+            "displayName": "Netatmo Events", 
+            "fields": [
+                {
+                    "multivalue": false, 
+                    "type": "string", 
+                    "hidden": true, 
+                    "fieldName": "source", 
+                    "displayName": "source", 
+                    "owner": "BaseEvent", 
+                    "comment": "", 
+                    "required": false
+                }, 
+                {
+                    "multivalue": false, 
+                    "type": "string", 
+                    "hidden": true, 
+                    "fieldName": "sourcetype", 
+                    "displayName": "sourcetype", 
+                    "owner": "BaseEvent", 
+                    "comment": "", 
+                    "required": false
+                }, 
+                {
+                    "multivalue": false, 
+                    "type": "string", 
+                    "hidden": true, 
+                    "fieldName": "host", 
+                    "displayName": "host", 
+                    "owner": "BaseEvent", 
+                    "comment": "", 
+                    "required": false
+                }, 
+                {
+                    "multivalue": false, 
+                    "type": "string", 
+                    "hidden": false, 
+                    "fieldName": "device", 
+                    "displayName": "device", 
+                    "comment": "", 
+                    "required": true
+                }, 
+                {
+                    "multivalue": false, 
+                    "type": "number", 
+                    "hidden": false, 
+                    "fieldName": "humidity", 
+                    "displayName": "humidity", 
+                    "comment": "", 
+                    "required": true
+                }, 
+                {
+                    "multivalue": false, 
+                    "type": "string", 
+                    "hidden": false, 
+                    "fieldName": "module_name", 
+                    "displayName": "module_name", 
+                    "comment": "", 
+                    "required": true
+                }, 
+                {
+                    "multivalue": false, 
+                    "type": "string", 
+                    "hidden": false, 
+                    "fieldName": "station", 
+                    "displayName": "station", 
+                    "comment": "", 
+                    "required": true
+                }, 
+                {
+                    "multivalue": false, 
+                    "type": "number", 
+                    "hidden": false, 
+                    "fieldName": "temperature", 
+                    "displayName": "temperature", 
+                    "comment": "", 
+                    "required": true
+                }, 
+                {
+                    "multivalue": false, 
+                    "type": "string", 
+                    "hidden": false, 
+                    "fieldName": "type_label", 
+                    "displayName": "type_label", 
+                    "comment": "", 
+                    "required": true
+                }, 
+                {
+                    "multivalue": false, 
+                    "type": "number", 
+                    "hidden": false, 
+                    "fieldName": "noise", 
+                    "displayName": "noise", 
+                    "comment": "", 
+                    "required": false
+                }, 
+                {
+                    "multivalue": false, 
+                    "type": "number", 
+                    "hidden": false, 
+                    "fieldName": "pressure", 
+                    "displayName": "pressure", 
+                    "comment": "", 
+                    "required": false
+                }, 
+                {
+                    "multivalue": false, 
+                    "type": "number", 
+                    "hidden": false, 
+                    "fieldName": "co2", 
+                    "displayName": "co2", 
+                    "comment": "", 
+                    "required": false
+                }
+            ], 
+            "calculations": [], 
+            "parentName": "BaseEvent"
+        }, 
+        {
+            "comment": "", 
+            "constraints": [
+                {
+                    "search": " type_label=\"Base Station\""
+                }
+            ], 
+            "objectName": "Base_Station", 
+            "displayName": "Base Station", 
+            "fields": [
+                {
+                    "multivalue": false, 
+                    "type": "number", 
+                    "hidden": false, 
+                    "fieldName": "noise", 
+                    "displayName": "noise", 
+                    "owner": "Netatmo_Events", 
+                    "comment": "", 
+                    "required": true
+                }, 
+                {
+                    "multivalue": false, 
+                    "type": "number", 
+                    "hidden": false, 
+                    "fieldName": "pressure", 
+                    "displayName": "pressure", 
+                    "owner": "Netatmo_Events", 
+                    "comment": "", 
+                    "required": true
+                }, 
+                {
+                    "multivalue": false, 
+                    "type": "number", 
+                    "hidden": false, 
+                    "fieldName": "co2", 
+                    "displayName": "co2", 
+                    "owner": "Netatmo_Events", 
+                    "comment": "", 
+                    "required": true
+                }, 
+                {
+                    "multivalue": false, 
+                    "type": "string", 
+                    "hidden": true, 
+                    "fieldName": "source", 
+                    "displayName": "source", 
+                    "owner": "BaseEvent", 
+                    "comment": "", 
+                    "required": false
+                }, 
+                {
+                    "multivalue": false, 
+                    "type": "string", 
+                    "hidden": true, 
+                    "fieldName": "sourcetype", 
+                    "displayName": "sourcetype", 
+                    "owner": "BaseEvent", 
+                    "comment": "", 
+                    "required": false
+                }, 
+                {
+                    "multivalue": false, 
+                    "type": "string", 
+                    "hidden": true, 
+                    "fieldName": "host", 
+                    "displayName": "host", 
+                    "owner": "BaseEvent", 
+                    "comment": "", 
+                    "required": false
+                }
+            ], 
+            "calculations": [], 
+            "parentName": "Netatmo_Events"
+        }, 
+        {
+            "comment": "", 
+            "constraints": [
+                {
+                    "search": "type_label=\"Outdoor Module\""
+                }
+            ], 
+            "objectName": "Outdoor_Module", 
+            "displayName": "Outdoor Module", 
+            "fields": [
+                {
+                    "multivalue": false, 
+                    "type": "string", 
+                    "hidden": true, 
+                    "fieldName": "source", 
+                    "displayName": "source", 
+                    "owner": "BaseEvent", 
+                    "comment": "", 
+                    "required": false
+                }, 
+                {
+                    "multivalue": false, 
+                    "type": "string", 
+                    "hidden": true, 
+                    "fieldName": "sourcetype", 
+                    "displayName": "sourcetype", 
+                    "owner": "BaseEvent", 
+                    "comment": "", 
+                    "required": false
+                }, 
+                {
+                    "multivalue": false, 
+                    "type": "string", 
+                    "hidden": true, 
+                    "fieldName": "host", 
+                    "displayName": "host", 
+                    "owner": "BaseEvent", 
+                    "comment": "", 
+                    "required": false
+                }
+            ], 
+            "calculations": [], 
+            "parentName": "Netatmo_Events"
+        }, 
+        {
+            "comment": "", 
+            "constraints": [
+                {
+                    "search": "type_label=\"Indoor Module\""
+                }
+            ], 
+            "objectName": "Indoor_Module", 
+            "displayName": "Indoor Module", 
+            "fields": [
+                {
+                    "multivalue": false, 
+                    "type": "number", 
+                    "hidden": false, 
+                    "fieldName": "co2", 
+                    "displayName": "co2", 
+                    "owner": "Netatmo_Events", 
+                    "comment": "", 
+                    "required": true
+                }, 
+                {
+                    "multivalue": false, 
+                    "type": "string", 
+                    "hidden": true, 
+                    "fieldName": "source", 
+                    "displayName": "source", 
+                    "owner": "BaseEvent", 
+                    "comment": "", 
+                    "required": false
+                }, 
+                {
+                    "multivalue": false, 
+                    "type": "string", 
+                    "hidden": true, 
+                    "fieldName": "sourcetype", 
+                    "displayName": "sourcetype", 
+                    "owner": "BaseEvent", 
+                    "comment": "", 
+                    "required": false
+                }, 
+                {
+                    "multivalue": false, 
+                    "type": "string", 
+                    "hidden": true, 
+                    "fieldName": "host", 
+                    "displayName": "host", 
+                    "owner": "BaseEvent", 
+                    "comment": "", 
+                    "required": false
+                }
+            ], 
+            "calculations": [], 
+            "parentName": "Netatmo_Events"
+        }
+    ], 
+    "displayName": "Netatmo", 
+    "objectSummary": {
+        "Event-Based": 4, 
+        "Search-Based": 0, 
+        "Transaction-Based": 0, 
+        "Interfaces": 0, 
+        "Interface Implementations": 0
+    }, 
+    "modelName": "Netatmo", 
+    "description": "", 
+    "objectNameList": [
+        "Netatmo_Events", 
+        "Base_Station", 
+        "Outdoor_Module", 
+        "Indoor_Module"
+    ]
+}
