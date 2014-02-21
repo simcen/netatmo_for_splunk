@@ -1,5 +1,6 @@
 <nav search_view="search" color="#929ea5">
   <view name="netatmo_metrics" default="true" />
+  <view name="periodenvergleich" />
   <view name="search" />
   <view name="data_models" />
   <view name="reports" />
