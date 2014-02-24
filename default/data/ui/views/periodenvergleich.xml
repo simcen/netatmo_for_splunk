@@ -7,7 +7,7 @@
         class="splunk-manager"
         data-require="splunkjs/mvc/searchmanager"
         data-options='{
-          "search": "index=netatmo | fields temperature, device | eval marker=case((_time&lt;relative_time(now(), \"-3d@d\")), \"older\", (_time&lt;relative_time(now(), \"-2d@d\")), \"2dago\", (_time&lt;relative_time(now(), \"-1d@d\")), \"1dago\") | eval 1dago=case(marker==\"1dago\", temperature) | eval 2dago=case(marker==\"2dago\", temperature) | stats avg(1dago) AS \"Gestern\" , avg(2dago) AS \"Vorgestern\" by device | eval Differenz=Vorgestern-Gestern | eval color=if(Differenz>0,\"#009933\",\"#993333\")",
+          "search": "index=netatmo | fields temperature, device | eval marker=case((_time&lt;relative_time(now(), \"-3d@d\")), \"older\", (_time&lt;relative_time(now(), \"-2d@d\")), \"2dago\", (_time&lt;relative_time(now(), \"-1d@d\")), \"1dago\") | eval 1dago=case(marker==\"1dago\", temperature) | eval 2dago=case(marker==\"2dago\", temperature) | stats avg(1dago) AS \"Gestern1\" , avg(2dago) AS \"Vorgestern2\" by device | eval Differenz=Vorgestern2-Gestern1 | eval color=if(Differenz>0,\"#009933\",\"#993333\")",
           "earliest_time": "-3d@d",
           "latest_time": "-1d@d",
           "status_buckets": 0,
@@ -22,8 +22,8 @@
         data-options='{
         "managerid": "amChartSearch",
         "categoryField": "device",
-        "valueField1": "Gestern",
-        "valueField2": "Vorgestern",
+        "valueField1": "Gestern1",
+        "valueField2": "Vorgestern2",
         "valueField3": "Differenz",
         "colorField": "color",
         "height": 450
