@@ -1,0 +1,106 @@
+<form>
+  <label>Datamodel Performance Comparison</label>
+  <fieldset autoRun="true" submitButton="true">
+    <input type="dropdown" token="station" searchWhenChanged="true">
+      <label>Select a Station:</label>
+      <default>*</default>
+      <choice value="*">All</choice>
+      <populatingSearch fieldForValue="station" fieldForLabel="station">
+        <![CDATA[ | inputlookup netatmo_stations | fields station ]]>
+      </populatingSearch>
+    </input>
+    <input type="dropdown" token="type" searchWhenChanged="true">
+      <label>Select a Module type:</label>
+      <default>*</default>
+      <choice value="*">All</choice>
+      <populatingSearch fieldForValue="type" fieldForLabel="type_label">
+        <![CDATA[ | inputlookup netatmo_stations | search station="$station$" | fields type,type_label ]]>
+      </populatingSearch>
+    </input>
+    <input type="dropdown" token="module_name" searchWhenChanged="true">
+      <label>Select a Module:</label>
+      <default>*</default>
+      <choice value="*">All</choice>
+      <populatingSearch fieldForValue="module_name" fieldForLabel="module_name">
+        <![CDATA[ | inputlookup netatmo_stations | search station="$station$" type="$type$" | fields module_name ]]>
+      </populatingSearch>
+    </input>
+    <input type="time" searchWhenChanged="true">
+      <default>Last 24 hours</default>
+    </input>
+  </fieldset>
+  <row>
+    <chart>
+      <title>Temperature (pivot)</title>
+      <searchString>| pivot Netatmo Netatmo_Events avg(temperature) AS "Average of temperature" SPLITROW _time AS "_time" PERIOD auto SPLITCOL device FILTER module_name is "$module_name$" FILTER station is "$station$" FILTER type_label is * SORT 0 _time NUMCOLS 100</searchString>
+      <earliestTime>$earliest$</earliestTime>
+      <latestTime>$latest$</latestTime>
+      <!--<searchString>index="netatmo" station="$station$" type="$type$" module_name="$module_name$" | timechart avg(temperature) by device</searchString>-->
+      <option name="charting.axisTitleY.text">°C</option>
+      <option name="charting.axisTitleX.visibility">collapsed</option>
+      <option name="charting.axisTitleY.visibility">visible</option>
+      <option name="charting.axisX.scale">linear</option>
+      <option name="charting.axisY.scale">linear</option>
+      <option name="charting.chart">area</option>
+      <option name="charting.chart.nullValueMode">connect</option>
+      <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+      <option name="charting.chart.stackMode">default</option>
+      <option name="charting.chart.style">shiny</option>
+      <option name="charting.drilldown">all</option>
+      <option name="charting.layout.splitSeries">0</option>
+      <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+      <option name="charting.legend.placement">right</option>
+    </chart>
+    <chart>
+      <title>Temperature (tstats)</title>
+      <searchString>| tstats prestats=t avg(Netatmo_Events.temperature) AS temperature from datamodel=Netatmo where Netatmo_Events.station="$station$" Netatmo_Events.type_label="*" Netatmo_Events.module_name="$module_name$" by Netatmo_Events.device, _time span=auto  | timechart avg(Netatmo_Events.temperature) by Netatmo_Events.device</searchString>
+      <option name="charting.axisTitleY.text">°C</option>
+      <option name="charting.axisTitleX.visibility">collapsed</option>
+      <option name="charting.axisTitleY.visibility">visible</option>
+      <option name="charting.axisX.scale">linear</option>
+      <option name="charting.axisY.scale">linear</option>
+      <option name="charting.chart">area</option>
+      <option name="charting.chart.nullValueMode">connect</option>
+      <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+      <option name="charting.chart.stackMode">default</option>
+      <option name="charting.chart.style">shiny</option>
+      <option name="charting.drilldown">all</option>
+      <option name="charting.layout.splitSeries">0</option>
+      <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+      <option name="charting.legend.placement">right</option>
+    </chart>
+    <chart>
+      <title>Temperature (raw)</title>
+      <searchString>index="netatmo" station="$station$" type="$type$" module_name="$module_name$" | timechart avg(temperature) by device</searchString>
+      <!--<searchString>| pivot Netatmo Netatmo_Events avg(temperature) AS "Average of temperature" SPLITROW _time AS "_time" PERIOD auto SPLITCOL device FILTER module_name is "$module_name$" FILTER station is "$station$" FILTER type_label is * SORT 0 _time NUMCOLS 100</searchString>-->
+      <option name="charting.axisTitleY.text">°C</option>
+      <option name="charting.axisTitleX.visibility">collapsed</option>
+      <option name="charting.axisTitleY.visibility">visible</option>
+      <option name="charting.axisX.scale">linear</option>
+      <option name="charting.axisY.scale">linear</option>
+      <option name="charting.chart">area</option>
+      <option name="charting.chart.nullValueMode">connect</option>
+      <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+      <option name="charting.chart.stackMode">default</option>
+      <option name="charting.chart.style">shiny</option>
+      <option name="charting.drilldown">all</option>
+      <option name="charting.layout.splitSeries">0</option>
+      <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+      <option name="charting.legend.placement">right</option>
+    </chart>
+  </row>
+  <row>
+    <table>
+      <title>Number of Events by Device (pivot)</title>
+      <searchString>| pivot Netatmo Netatmo_Events count(Netatmo_Events) AS "Count of Netatmo Events" SPLITROW device AS "device" FILTER module_name is "$module_name$" FILTER station is "$station$" FILTER type_label is * SORT 100 device</searchString>
+    </table>
+    <table>
+      <title>Number of Events by Device (tstats)</title>
+      <searchString>| tstats count from datamodel=Netatmo where Netatmo_Events.station="$station$" Netatmo_Events.type_label="*" Netatmo_Events.module_name="$module_name$" by Netatmo_Events.device</searchString>
+    </table>    
+    <table>
+      <title>Number of Events by Device (raw)</title>
+      <searchString>index=netatmo station="$station$" type="$type$" module_name="$module_name$" | stats count by device</searchString>
+    </table>
+  </row>
+</form>
