@@ -57,6 +57,7 @@ define(function(require, exports, module) {
 			        "maxColumns": 1,
 			        "position": "right",
 					"useGraphSettings": true,
+                                        "useMarkerColorForLabels": true,
 					"markerSize": 10
 			    },
 			    "valueAxes": [{
@@ -65,28 +66,28 @@ define(function(require, exports, module) {
 			    }],
 			    "dataProvider": data,
 			    "graphs": [{
-			        "balloonText": "Gestern:[[value]]",
+			        "balloonText": this.settings.get('valueField1')+":[[value]]",
 			        "fillAlphas": 0.8,
 			        "lineAlpha": 0.2,
-			        "title": "Gestern",
+			        "title": this.settings.get('valueField1'),
 			        "type": "column",
-			        "valueField": "yesterday",
+			        "valueField": "valueField1",
 			        "fillColors": "#cccccc",
 			        "lineColor": "#cccccc",
 			    }, {
-			        "balloonText": "Vorgestern:[[value]]",
+			        "balloonText": this.settings.get("valueField2")+":[[value]]",
 			        "fillAlphas": 0.8,
 			        "lineAlpha": 0.2,
-			        "title": "Vorgestern",
+			        "title": this.settings.get('valueField2'),
 			        "type": "column",
-			        "valueField": "tdby",
+			        "valueField": "valueField2",
 			        "fillColors": "#333333",
 			        "lineColor": "#333333",
 			    }, {
-			        "balloonText": "Differenz:[[value]]",
+			        "balloonText": this.settings.get("valueField3")+":[[value]]",
 			        "fillAlphas": 0.8,
 			        "lineAlpha": 0.2,
-			        "title": "Unterschied",
+			        "title": this.settings.get('valueField3'),
 			        "type": "column",
 			        "valueField": "difference",
 			        "lineColor": "#cc3333",
@@ -121,8 +122,8 @@ define(function(require, exports, module) {
              _(data).chain().map(function(result) {
              	return {
              		"device": result[categoryField],
-			        "yesterday": result[valueField1],
-			        "tdby": result[valueField2],
+			        "valueField1": result[valueField1],
+			        "valueField2": result[valueField2],
 			        "difference": result[valueField3],
 			        "color": result[colorField],
                 };
