@@ -57,12 +57,12 @@ define(function(require, exports, module) {
 			        "maxColumns": 1,
 			        "position": "right",
 					"useGraphSettings": true,
-                                        "useMarkerColorForLabels": true,
+                    "useMarkerColorForLabels": true,
 					"markerSize": 10
 			    },
 			    "valueAxes": [{
 			        "axisAlpha": 0.3,   
-			        "minimum": -10,
+			        "minimum": this.settings.get('minimum'),
 			    }],
 			    "dataProvider": data,
 			    "graphs": [{
@@ -93,7 +93,7 @@ define(function(require, exports, module) {
 			        "lineColor": "#cc3333",
 			        "fillColorsField": this.settings.get('colorField'),
 			    }],
-			    "categoryField": "device",
+			    "categoryField": "group",
 			    "categoryAxis": {
 			        "gridPosition": "start",
 			        "axisAlpha": 0,
@@ -121,7 +121,7 @@ define(function(require, exports, module) {
 
              _(data).chain().map(function(result) {
              	return {
-             		"device": result[categoryField],
+             		"group": result[categoryField],
 			        "valueField1": result[valueField1],
 			        "valueField2": result[valueField2],
 			        "difference": result[valueField3],
