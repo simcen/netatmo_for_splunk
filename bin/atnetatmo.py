@@ -93,6 +93,7 @@ class ClientAuth:
 
         postParams = {
                 "grant_type" : "password",
+		"scope" : "read_station",
                 "client_id" : clientId,
                 "client_secret" : clientSecret,
                 "username" : username,
