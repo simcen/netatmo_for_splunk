@@ -154,7 +154,7 @@ class DeviceList:
                 }
         self.resp = postRequest(_DEVICELIST_REQ, postParams)
         self.rawData = self.resp['body']
-        logger.debug("Got a response %s." % self.resp['body'])
+        logger.debug("Got a response %s." % json.dumps(self.resp['body'],sort_keys=True, indent=4))
         self.stations = {}
         for d in self.rawData['devices'] : self.stations[d['_id']] = d
         self.modules = {}
@@ -171,20 +171,20 @@ class DeviceList:
         for i,station in self.stations.items():
             #logger.debug("Station is: %s" % s)
         #for station in self.stations:
-            logger.debug("Station is: %s" % station)
+            logger.debug("Station is: %s" % json.dumps(station,sort_keys=True, indent=4))
             ds = station['last_data_store']
-            logger.debug("Last Data array is: %s" % ds)
-            ds = station['last_data_store'][station['_id']]
+            logger.debug("Last Data array is: %s" % json.dumps(ds,sort_keys=True, indent=4))
+            #ds = station['last_data_store'][station['_id']]
+            ds = station['last_data_store']
             lastD[station['_id']] = {"when":ds['K'],"temperature":ds['a'],"pressure":ds['e'],"noise":ds['S'],"co2":ds['h'],"humidity":ds['b'],"station":station['station_name'],"module_name":station["module_name"],"_id":station['_id'],"station_id":station['_id'],"type":station['type']}
             for m in station['modules']:
-                ds = station['last_data_store'][m]
+                dm = self.modules[m]['last_data_store']
                 #Indor modules have a value for co2 (h)
-                if 'h' in ds:
-                    lastD[m] = {"when":ds['K'],"temperature":ds['a'],"humidity":ds['b'],"co2":ds['h'],"station":station['station_name'],"module_name":self.modules[m]['module_name'],"_id":m,"station_id":station['_id'],"type":self.modules[m]['type']}
+                if 'h' in dm:
+                    lastD[m] = {"when":dm['K'],"temperature":dm['a'],"humidity":dm['b'],"co2":dm['h'],"station":station['station_name'],"module_name":self.modules[m]['module_name'],"_id":m,"station_id":station['_id'],"type":self.modules[m]['type']}
                 #Outdoor modules do not
                 else:
-                    lastD[m] = {"when":ds['K'],"temperature":ds['a'],"humidity":ds['b'],"station":station['station_name'],"module_name":self.modules[m]['module_name'],"_id":m,"station_id":station['_id'],"type":self.modules[m]['type']}
-            
+                    lastD[m] = {"when":dm['K'],"temperature":dm['a'],"humidity":dm['b'],"station":station['station_name'],"module_name":self.modules[m]['module_name'],"_id":m,"station_id":station['_id'],"type":self.modules[m]['type']}
         return lastD if len(lastD) else None
 
 

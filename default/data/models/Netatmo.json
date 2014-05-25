@@ -132,7 +132,7 @@
                     "search": " type_label=\"Base Station\""
                 }
             ], 
-            "objectName": "Base_Station", 
+            "objectName": "Basis_Station", 
             "displayName": "Base Station", 
             "fields": [
                 {
@@ -310,7 +310,7 @@
     "description": "", 
     "objectNameList": [
         "Netatmo_Events", 
-        "Base_Station", 
+        "Basis_Station", 
         "Outdoor_Module", 
         "Indoor_Module"
     ]
