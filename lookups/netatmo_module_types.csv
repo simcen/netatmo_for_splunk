@@ -1,4 +1,5 @@
 type,type_label
 NAMain,"Base Station"
 NAModule1,"Outdoor Module"
+NAModule3,"Rain Gauge"
 NAModule4, "Indoor Module"
