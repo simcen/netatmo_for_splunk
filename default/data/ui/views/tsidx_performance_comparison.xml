@@ -32,7 +32,7 @@
   <row>
     <chart>
       <title>Temperature (pivot)</title>
-      <searchString>| pivot Netatmo Netatmo_Events avg(temperature) AS "Average of temperature" SPLITROW _time AS "_time" PERIOD auto SPLITCOL device FILTER module_name is "$module_name$" FILTER station is "$station$" FILTER type_label is * SORT 0 _time NUMCOLS 100</searchString>
+      <searchString>| pivot Netatmo Netatmo_Data avg(temperature) AS "Average of temperature" SPLITROW _time AS "_time" PERIOD auto SPLITCOL device FILTER module_name is "$module_name$" FILTER station is "$station$" FILTER type_label is * SORT 0 _time NUMCOLS 100</searchString>
       <earliestTime>$earliest$</earliestTime>
       <latestTime>$latest$</latestTime>
       <!--<searchString>index="netatmo" station="$station$" type="$type$" module_name="$module_name$" | timechart avg(temperature) by device</searchString>-->
@@ -53,7 +53,7 @@
     </chart>
     <chart>
       <title>Temperature (tstats)</title>
-      <searchString>| tstats prestats=t avg(Netatmo_Events.temperature) AS temperature from datamodel=Netatmo where Netatmo_Events.station="$station$" Netatmo_Events.type_label="*" Netatmo_Events.module_name="$module_name$" by Netatmo_Events.device, _time span=auto  | timechart avg(Netatmo_Events.temperature) by Netatmo_Events.device</searchString>
+      <searchString>| tstats prestats=t avg(Netatmo_Data.temperature) AS temperature from datamodel=Netatmo where Netatmo_Data.station="$station$" Netatmo_Data.type_label="*" Netatmo_Data.module_name="$module_name$" by Netatmo_Data.device, _time span=auto  | timechart avg(Netatmo_Data.temperature) by Netatmo_Data.device</searchString>
       <option name="charting.axisTitleY.text">°C</option>
       <option name="charting.axisTitleX.visibility">collapsed</option>
       <option name="charting.axisTitleY.visibility">visible</option>
@@ -72,7 +72,7 @@
     <chart>
       <title>Temperature (raw)</title>
       <searchString>index="netatmo" station="$station$" type="$type$" module_name="$module_name$" | timechart avg(temperature) by device</searchString>
-      <!--<searchString>| pivot Netatmo Netatmo_Events avg(temperature) AS "Average of temperature" SPLITROW _time AS "_time" PERIOD auto SPLITCOL device FILTER module_name is "$module_name$" FILTER station is "$station$" FILTER type_label is * SORT 0 _time NUMCOLS 100</searchString>-->
+      <!--<searchString>| pivot Netatmo Netatmo_Data avg(temperature) AS "Average of temperature" SPLITROW _time AS "_time" PERIOD auto SPLITCOL device FILTER module_name is "$module_name$" FILTER station is "$station$" FILTER type_label is * SORT 0 _time NUMCOLS 100</searchString>-->
       <option name="charting.axisTitleY.text">°C</option>
       <option name="charting.axisTitleX.visibility">collapsed</option>
       <option name="charting.axisTitleY.visibility">visible</option>
@@ -92,11 +92,11 @@
   <row>
     <table>
       <title>Number of Events by Device (pivot)</title>
-      <searchString>| pivot Netatmo Netatmo_Events count(Netatmo_Events) AS "Count of Netatmo Events" SPLITROW device AS "device" FILTER module_name is "$module_name$" FILTER station is "$station$" FILTER type_label is * SORT 100 device</searchString>
+      <searchString>| pivot Netatmo Netatmo_Data count(Netatmo_Data) AS "Count of Netatmo Events" SPLITROW device AS "device" FILTER module_name is "$module_name$" FILTER station is "$station$" FILTER type_label is * SORT 100 device</searchString>
     </table>
     <table>
       <title>Number of Events by Device (tstats)</title>
-      <searchString>| tstats count from datamodel=Netatmo where Netatmo_Events.station="$station$" Netatmo_Events.type_label="*" Netatmo_Events.module_name="$module_name$" by Netatmo_Events.device</searchString>
+      <searchString>| tstats count from datamodel=Netatmo where Netatmo_Data.station="$station$" Netatmo_Data.type_label="*" Netatmo_Data.module_name="$module_name$" by Netatmo_Data.device</searchString>
     </table>    
     <table>
       <title>Number of Events by Device (raw)</title>
