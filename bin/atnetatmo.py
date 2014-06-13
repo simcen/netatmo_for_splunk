@@ -169,26 +169,18 @@ class DeviceList:
     def techdata2splunk(self): 
         lastD = {}
         for i,station in self.stations.items():
-            #logger.debug("Station is: %s" % s)
-        #for station in self.stations:
-            logger.debug("Station is: %s" % json.dumps(station,sort_keys=True, indent=4))
-            ds = station['dashboard_data']
-            logger.debug("Last Data array is: %s" % json.dumps(ds,sort_keys=True, indent=4))
-            #ds = station['last_data_store'][station['_id']]
-            #ds = station['last_data_store']
-            lastD[station['_id']] = {"when":ds['time_utc'],"temperature":ds['Temperature'],"pressure":ds['AbsolutePressure'],"noise":ds['Noise'],"co2":ds['CO2'],"humidity":ds['Humidity'],"station":station['station_name'],"module_name":station["module_name"],"_id":station['_id'],"station_id":station['_id'],"type":station['type']}
+            #logger.debug("Station is: %s" % json.dumps(station, sort_keys=True, indent=4))
+            station_dashboard_data = station['dashboard_data']
+            station_meta_data = {"when":station_dashboard_data['time_utc'], "station_name":station['station_name'],"module_name":station["module_name"],"_id":station['_id'],"type":station['type']}
+            lastD[station['_id']] = dict(station_meta_data.items() + station_dashboard_data.items())
+
             for m in station['modules']:
-                dm = self.modules[m]['dashboard_data']
-                #Indor modules have a value for co2 (h)
-                if 'CO2' in dm:
-                    lastD[m] = {"when":dm['time_utc'],"temperature":dm['Temperature'],"humidity":dm['Humidity'],"co2":dm['CO2'],"station":station['station_name'],"module_name":self.modules[m]['module_name'],"_id":m,"station_id":station['_id'],"type":self.modules[m]['type']}
-                #Outdoor modules do not
-                else:
-                    lastD[m] = {"when":dm['time_utc'],"temperature":dm['Temperature'],"humidity":dm['Humidity'],"station":station['station_name'],"module_name":self.modules[m]['module_name'],"_id":m,"station_id":station['_id'],"type":self.modules[m]['type']}
+                module_dashboard_data = self.modules[m]['dashboard_data']
+                module_meta_data = {"when":module_dashboard_data['time_utc'], "station_name":station['station_name'],"module_name":self.modules[m]['module_name'],"_id":m,"station_id":station['_id'],"type":self.modules[m]['type']}
+                lastD[m] = dict(module_meta_data.items() + module_dashboard_data.items())
+
+	#logger.debug("lastD is %s", json.dumps(lastD, sort_keys=True, indent=4))
         return lastD if len(lastD) else None
-
-
-
 
 
     def metadata2splunk(self):
