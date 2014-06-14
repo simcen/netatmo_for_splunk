@@ -127,7 +127,7 @@
         <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
         <option name="charting.legend.placement">bottom</option>
         <option name="charting.axisTitleY.text">°C</option>
-        <option name="charting.fieldColors">{"Hourly Average": 0x639BF1, "Daily Maximum":0xFF5A09, "Daily Minimum":0xffdf09}</option>
+        <option name="charting.fieldColors">{"Daily Minimum": 0x639BF1, "Daily Maximum":0xFF5A09, "Hourly Average":0xffdf09}</option>
       </chart>
     </panel>
   </row>
