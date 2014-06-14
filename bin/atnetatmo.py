@@ -171,12 +171,12 @@ class DeviceList:
         for i,station in self.stations.items():
             #logger.debug("Station is: %s" % json.dumps(station, sort_keys=True, indent=4))
             station_dashboard_data = station['dashboard_data']
-            station_meta_data = {"when":station_dashboard_data['time_utc'], "station_name":station['station_name'],"module_name":station["module_name"],"_id":station['_id'],"type":station['type']}
+            station_meta_data = {"station_name":station['station_name'],"module_name":station["module_name"],"_id":station['_id'],"type":station['type']}
             lastD[station['_id']] = dict(station_meta_data.items() + station_dashboard_data.items())
 
             for m in station['modules']:
                 module_dashboard_data = self.modules[m]['dashboard_data']
-                module_meta_data = {"when":module_dashboard_data['time_utc'], "station_name":station['station_name'],"module_name":self.modules[m]['module_name'],"_id":m,"station_id":station['_id'],"type":self.modules[m]['type']}
+                module_meta_data = { "station_name":station['station_name'],"module_name":self.modules[m]['module_name'],"_id":m,"station_id":station['_id'],"type":self.modules[m]['type']}
                 lastD[m] = dict(module_meta_data.items() + module_dashboard_data.items())
 
 	#logger.debug("lastD is %s", json.dumps(lastD, sort_keys=True, indent=4))

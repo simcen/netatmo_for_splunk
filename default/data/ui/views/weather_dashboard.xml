@@ -1,0 +1,134 @@
+<form>
+  <label>Weather Dashboard</label>
+  <description/>
+  <fieldset autoRun="true" submitButton="true">
+    <input type="dropdown" token="station" searchWhenChanged="true">
+      <label>Select a Station (required):</label>
+      <default>*</default>
+      <populatingSearch earliest="$earliest$" latest="$latest$" fieldForLabel="station" fieldForValue="station">| inputlookup netatmo_stations | fields station</populatingSearch>
+    </input>
+    <input type="dropdown" token="module_name" searchWhenChanged="true">
+      <label>Select a Module (required):</label>
+      <default>*</default>
+      <populatingSearch earliest="-7d@h" latest="now" fieldForLabel="module_name" fieldForValue="module_name">| inputlookup netatmo_stations | search station="$station$"  | fields module_name</populatingSearch>
+    </input>
+    <input type="time" searchWhenChanged="true">
+      <label/>
+      <default>
+        <earliestTime>-7d@h</earliestTime>
+        <latestTime>now</latestTime>
+      </default>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <single>
+        <title>Current Indoor Temperature</title>
+        <searchString>| tstats first(Netatmo_Data.temperature) AS temperature from datamodel=Netatmo where Netatmo_Data.station="*" Netatmo_Data.type_label="Base Station"</searchString>
+        <earliestTime>-15m</earliestTime>
+        <latestTime>now</latestTime>
+        <option name="drilldown">none</option>
+        <option name="linkView">search</option>
+        <option name="afterLabel">°C</option>
+      </single>
+      <single>
+        <title>Current Outdoor Temperature</title>
+        <searchString>| tstats first(Netatmo_Data.temperature) AS temperature from datamodel=Netatmo where Netatmo_Data.station="*" Netatmo_Data.type_label="Outdoor Module"</searchString>
+        <earliestTime>-15m</earliestTime>
+        <latestTime>now</latestTime>
+        <option name="drilldown">none</option>
+        <option name="linkView">search</option>
+        <option name="afterLabel">°C</option>
+      </single>
+    </panel>
+    <panel>
+      <single>
+        <title>Current Pressure</title>
+        <searchString>| tstats first(Netatmo_Data.pressure) AS pressure from datamodel=Netatmo where Netatmo_Data.station="*" Netatmo_Data.type_label="Base Station"</searchString>
+        <earliestTime>-7d@h</earliestTime>
+        <latestTime>now</latestTime>
+        <option name="drilldown">none</option>
+        <option name="afterLabel">mbar</option>
+        <option name="linkView">search</option>
+      </single>
+    </panel>
+    <panel>
+      <single>
+        <title>Current Indoor Humidity</title>
+        <searchString>| tstats first(Netatmo_Data.humidity) AS humidity from datamodel=Netatmo where Netatmo_Data.station="*" Netatmo_Data.type_label="Base Station"</searchString>
+        <earliestTime>-15m</earliestTime>
+        <latestTime>now</latestTime>
+        <option name="drilldown">none</option>
+        <option name="afterLabel">%</option>
+        <option name="linkView">search</option>
+      </single>
+      <single>
+        <title>Current Outdoor Humidity</title>
+        <searchString>| tstats first(Netatmo_Data.humidity) AS humidity from datamodel=Netatmo where Netatmo_Data.station="*" Netatmo_Data.type_label="Outdoor Module"</searchString>
+        <earliestTime>-15m</earliestTime>
+        <latestTime>now</latestTime>
+        <option name="drilldown">none</option>
+        <option name="afterLabel">%</option>
+        <option name="linkView">search</option>
+      </single>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <chart>
+        <title>Humidity vs. Temperature ($module_name$)</title>
+        <searchString>| tstats prestats=t avg(Netatmo_Data.temperature) AS temperature, avg(Netatmo_Data.humidity) AS humidity from datamodel=Netatmo where Netatmo_Data.station="$station$" Netatmo_Data.type_label="*" Netatmo_Data.module_name="$module_name$" by Netatmo_Data.device, _time span=30m  | timechart bins=50 span=30m avg(Netatmo_Data.humidity) AS Humidity, avg(Netatmo_Data.temperature) AS Temperature</searchString>
+        <earliestTime>$earliest$</earliestTime>
+        <latestTime>$latest$</latestTime>
+        <option name="charting.axisTitleX.visibility">collapsed</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.chart">column</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.drilldown">all</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.placement">bottom</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisY2.enabled">true</option>
+        <option name="charting.axisY2.scale">linear</option>
+        <option name="charting.chart.overlayFields">Temperature</option>
+        <option name="charting.fieldColors">{"Humidity": 0x639BF1, "Temperature":0xFF5A09}</option>
+      </chart>
+    </panel>
+    <panel>
+      <chart>
+        <title>Hourly Average vs. Daily Min/Max Temperature ($module_name$)</title>
+        <searchString>| tstats prestats=t avg(Netatmo_Data.temperature) AS temperature from datamodel=Netatmo where Netatmo_Data.station="$station$" Netatmo_Data.type_label="*" Netatmo_Data.module_name="$module_name$" by Netatmo_Data.device, _time span=1h  | timechart span=1h avg(Netatmo_Data.temperature) AS "Hourly Average" | append [| tstats prestats=t max(Netatmo_Data.temperature) AS temperature from datamodel=Netatmo where Netatmo_Data.station="$station$" Netatmo_Data.type_label="*" Netatmo_Data.module_name="$module_name$" by _time span=1d | timechart max(Netatmo_Data.temperature) AS "Daily Maximum" ] | append [| tstats prestats=t min(Netatmo_Data.temperature) AS temperature from datamodel=Netatmo where Netatmo_Data.station="$station$" Netatmo_Data.type_label="*" Netatmo_Data.module_name="$module_name$" by _time span=1d | timechart min(Netatmo_Data.temperature) AS "Daily Minimum" ] | sort _time</searchString>
+        <earliestTime>$earliest$</earliestTime>
+        <latestTime>$latest$</latestTime>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.enabled">false</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">line</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.drilldown">all</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.placement">bottom</option>
+        <option name="charting.axisTitleY.text">°C</option>
+        <option name="charting.fieldColors">{"Hourly Average": 0x639BF1, "Daily Maximum":0xFF5A09, "Daily Minimum":0xffdf09}</option>
+      </chart>
+    </panel>
+  </row>
+</form>

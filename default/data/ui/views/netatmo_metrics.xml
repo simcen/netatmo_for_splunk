@@ -33,7 +33,7 @@
     <chart>
       <title>Temperature</title>
       <!--<searchString>index="netatmo" station="$station$" type="$type$" module_name="$module_name$" | timechart avg(temperature) by device</searchString>-->
-      <searchString>| tstats prestats=t avg(Netatmo_Data.temperature) AS temperature from datamodel=Netatmo where Netatmo_Data.station="$station$" Netatmo_Data.type_label="*" Netatmo_Data.module_name="$module_name$" by Netatmo_Data.device, _time span=auto  | timechart avg(Netatmo_Data.temperature) by Netatmo_Data.device</searchString>
+      <searchString>| tstats prestats=t avg(Netatmo_Data.temperature) AS temperature from datamodel=Netatmo where Netatmo_Data.station="$station$" Netatmo_Data.type_label="*" Netatmo_Data.module_name="$module_name$" by Netatmo_Data.device, _time span=auto  | timechart useother=f avg(Netatmo_Data.temperature) by Netatmo_Data.device</searchString>
       <option name="charting.axisTitleY.text">°C</option>
       <option name="charting.axisTitleX.visibility">collapsed</option>
       <option name="charting.axisTitleY.visibility">visible</option>
@@ -51,7 +51,7 @@
     </chart>
     <chart>
       <title>Humidity</title>
-      <searchString>| tstats prestats=t avg(Netatmo_Data.humidity) AS humidity from datamodel=Netatmo where Netatmo_Data.station="$station$" Netatmo_Data.type_label="*" Netatmo_Data.module_name="$module_name$" by Netatmo_Data.device, _time span=auto  | timechart avg(Netatmo_Data.humidity) by Netatmo_Data.device</searchString>
+      <searchString>| tstats prestats=t avg(Netatmo_Data.humidity) AS humidity from datamodel=Netatmo where Netatmo_Data.station="$station$" Netatmo_Data.type_label="*" Netatmo_Data.module_name="$module_name$" by Netatmo_Data.device, _time span=auto  | timechart useother=f avg(Netatmo_Data.humidity) by Netatmo_Data.device</searchString>
       <option name="charting.axisTitleY.text">%</option>
       <option name="charting.axisTitleX.visibility">collapsed</option>
       <option name="charting.axisTitleY.visibility">visible</option>
@@ -71,7 +71,7 @@
   <row>
     <chart>
       <title>CO2</title>
-      <searchString>| tstats prestats=t avg(Netatmo_Data.co2) AS co2 from datamodel=Netatmo where Netatmo_Data.station="$station$" Netatmo_Data.type_label="*" Netatmo_Data.module_name="$module_name$" by Netatmo_Data.device, _time span=auto  | timechart avg(Netatmo_Data.co2) by Netatmo_Data.device</searchString>
+      <searchString>| tstats prestats=t avg(Netatmo_Data.co2) AS co2 from datamodel=Netatmo where Netatmo_Data.station="$station$" Netatmo_Data.type_label="*" Netatmo_Data.module_name="$module_name$" by Netatmo_Data.device, _time span=auto  | timechart useother=f avg(Netatmo_Data.co2) by Netatmo_Data.device</searchString>
       <option name="charting.axisTitleY.text">ppm</option>
       <option name="charting.axisTitleX.visibility">collapsed</option>
       <option name="charting.axisTitleY.visibility">visible</option>
@@ -89,7 +89,7 @@
     </chart>
     <chart>
       <title>Pressure</title>
-      <searchString>| tstats prestats=t avg(Netatmo_Data.pressure) AS pressure from datamodel=Netatmo where Netatmo_Data.station="$station$" Netatmo_Data.type_label="*" Netatmo_Data.module_name="$module_name$" by Netatmo_Data.device, _time span=auto  | timechart avg(Netatmo_Data.pressure) by Netatmo_Data.device</searchString>
+      <searchString>| tstats prestats=t avg(Netatmo_Data.pressure) AS pressure from datamodel=Netatmo where Netatmo_Data.station="$station$" Netatmo_Data.type_label="*" Netatmo_Data.module_name="$module_name$" by Netatmo_Data.device, _time span=auto  | timechart useother=f avg(Netatmo_Data.pressure) by Netatmo_Data.device</searchString>
       <option name="charting.axisTitleY.text">mbar</option>
       <option name="charting.axisTitleX.visibility">collapsed</option>
       <option name="charting.axisTitleY.visibility">visible</option>
@@ -109,7 +109,7 @@
     </chart>
     <chart>
       <title>Noise</title>
-      <searchString>| tstats prestats=t avg(Netatmo_Data.noise) AS noise from datamodel=Netatmo where Netatmo_Data.station="$station$" Netatmo_Data.type_label="*" Netatmo_Data.module_name="$module_name$" by Netatmo_Data.device, _time span=auto  | timechart avg(Netatmo_Data.noise) by Netatmo_Data.device</searchString>
+      <searchString>| tstats prestats=t avg(Netatmo_Data.noise) AS noise from datamodel=Netatmo where Netatmo_Data.station="$station$" Netatmo_Data.type_label="*" Netatmo_Data.module_name="$module_name$" by Netatmo_Data.device, _time span=auto  | timechart useother=f avg(Netatmo_Data.noise) by Netatmo_Data.device</searchString>
       <option name="charting.axisTitleY.text">dB</option>
       <option name="charting.axisTitleX.visibility">collapsed</option>
       <option name="charting.axisTitleY.visibility">visible</option>
