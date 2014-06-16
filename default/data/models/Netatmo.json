@@ -110,6 +110,18 @@
                     "fieldSearch": ""
                 },
                 {
+                    "fieldName": "pressure_area",
+                    "owner": "Netatmo_Data",
+                    "type": "string",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false,
+                    "editable": true,
+                    "displayName": "pressure_area",
+                    "comment": "",
+                    "fieldSearch": "pressure_area=*"
+                },
+                {
                     "fieldName": "co2",
                     "owner": "Netatmo_Data",
                     "type": "number",
@@ -291,6 +303,18 @@
                     "displayName": "pressure",
                     "comment": "",
                     "fieldSearch": "pressure=*"
+                },
+                {
+                    "fieldName": "pressure_area",
+                    "owner": "Netatmo_Data",
+                    "type": "number",
+                    "required": true,
+                    "multivalue": false,
+                    "hidden": false,
+                    "editable": true,
+                    "displayName": "pressure_area",
+                    "comment": "",
+                    "fieldSearch": "pressure_area=*"
                 },
                 {
                     "fieldName": "co2",

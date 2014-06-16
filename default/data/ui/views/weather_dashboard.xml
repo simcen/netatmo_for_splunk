@@ -1,4 +1,4 @@
-<form script="single_trend.js" stylesheet="single_trend.css">
+<form script="weather_dashboard.js, single_trend.js" stylesheet="weather_dashboard.css, single_trend.css">
   <label>Weather Dashboard</label>
   <description/>
   <fieldset autoRun="true" submitButton="true">
@@ -57,17 +57,18 @@
       </single>
     </panel>
     <panel>
-      <single>
+      <single id="pressure">
         <title>Current Pressure</title>
-        <searchString>| tstats prestats=t values(Netatmo_Data.pressure) AS pressure from datamodel=Netatmo where Netatmo_Data.station="$station$" Netatmo_Data.type_label="Base Station" by _time | sort - _time | stats first(Netatmo_Data.pressure) as pressure, last(Netatmo_Data.pressure) AS last_pressure | eval change=round(pressure-last_pressure, 1) | eval trendClass=if(change&gt;0,"increase","decrease") | eval change=if(change&gt;0,tostring("+".change."mbar"),tostring(change."mbar")) | fields - last_pressure</searchString>
+        <searchString>| tstats prestats=t values(Netatmo_Data.pressure) AS pressure, values(Netatmo_Data.pressure_area) from datamodel=Netatmo where Netatmo_Data.station="$station$" Netatmo_Data.type_label="Base Station" by _time Netatmo_Data.pressure_area | sort - _time | stats first(Netatmo_Data.pressure) as pressure, last(Netatmo_Data.pressure) AS last_pressure, first(Netatmo_Data.pressure_area) AS pressure_area | eval change=round(pressure-last_pressure, 1) | eval trendClass=if(change>0,"increase","decrease") | eval change=if(change>0,tostring("+".change."hPa"),tostring(change."hPa")) | fields - last_pressure</searchString>
         <earliestTime>$trend$</earliestTime>
         <latestTime>now</latestTime>
         <option name="drilldown">none</option>
-        <option name="afterLabel">mbar</option>
+        <option name="afterLabel">hPa</option>
         <option name="linkView">search</option>
         <option name="field">pressure</option>
         <option name="changeField">change</option>
         <option name="trendClassField">trendClass</option>
+        <option name="classField">pressure_area</option>
       </single>
     </panel>
     <panel>
