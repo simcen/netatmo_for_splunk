@@ -1,3 +1,64 @@
+#outdoor_temperature {
+    background: #F2DEDE;
+    border-top: 3px solid #d85d3c;
+}
+#outdoor_temperature .single-value, #creates .single-drilldown, #creates .single-value .under-label {
+    color: #d85d3c;
+}
+#outdoor_temperature .single-value .single-result{
+    font-size: 50px;
+    font-weight: 200;
+}
+
+#indoor_temperature {
+    background: #f8efef;
+    border-top: 3px solid #d85d3c;
+}
+#indoor_temperature .single-value, #creates .single-drilldown, #creates .single-value .under-label {
+    color: #d85d3c;
+}
+#indoor_temperature .single-value .single-result{
+    font-size: 50px;
+    font-weight: 200;
+}
+
+#pressure {
+    background: #FCF8E3;
+    border-top: 3px solid #eab51c;
+}
+#pressure .single-value, #creates .single-drilldown, #creates .single-value .under-label {
+    color: #eab51c;
+}
+#pressure .single-value .single-result{
+    font-size: 50px;
+    font-weight: 200;
+}
+
+#outdoor_humidity {
+    background: #c2e5ff;
+    border-top: 3px solid #31708f;
+}
+#outdoor_humidity .single-value, #totals .single-drilldown, #totals .single-value .under-label {
+    color: #31708f;
+}
+#outdoor_humidity .single-value .single-result {
+    font-size: 50px;
+    font-weight: 200;
+}
+
+#indoor_humidity {
+    background: #dbeffd;
+    border-top: 3px solid #31708f;
+}
+#indoor_humidity .single-value, #totals .single-drilldown, #totals .single-value .under-label {
+    color: #31708f;
+}
+#indoor_humidity .single-value .single-result {
+    font-size: 50px;
+    font-weight: 200;
+}
+
+
 #pressure_icon {
 	float: left;
 	position: relative;

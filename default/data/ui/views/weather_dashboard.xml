@@ -30,7 +30,7 @@
   </fieldset>
   <row>
     <panel>
-      <single>
+      <single id="indoor_temperature">
         <title>Current Indoor Temperature</title>
         <!--<searchString>| tstats first(Netatmo_Data.temperature) AS temperature from datamodel=Netatmo where Netatmo_Data.station="*" Netatmo_Data.type_label="Base Station"</searchString>-->
         <searchString>| tstats prestats=t values(Netatmo_Data.temperature) AS temperature from datamodel=Netatmo where Netatmo_Data.station="$station$" Netatmo_Data.type_label="Base Station" by _time | sort - _time | stats first(Netatmo_Data.temperature) as temperature, last(Netatmo_Data.temperature) AS last_temp | eval change=round(temperature-last_temp, 1) | eval trendClass=if(change&gt;0,"increase","decrease") | eval change=if(change&gt;0,tostring("+".change."°C"),tostring(change."°C")) | fields - last_temp</searchString>
@@ -43,7 +43,7 @@
         <option name="changeField">change</option>
         <option name="trendClassField">trendClass</option>
       </single>
-      <single>
+      <single id="outdoor_temperature">
         <title>Current Outdoor Temperature</title>
         <searchString>| tstats prestats=t values(Netatmo_Data.temperature) AS temperature from datamodel=Netatmo where Netatmo_Data.station="$station$" Netatmo_Data.type_label="Outdoor Module" by _time | sort - _time | stats first(Netatmo_Data.temperature) as temperature, last(Netatmo_Data.temperature) AS last_temp | eval change=round(temperature-last_temp, 1) | eval trendClass=if(change&gt;0,"increase","decrease") | eval change=if(change&gt;0,tostring("+".change."°C"),tostring(change."°C")) | fields - last_temp</searchString>
         <earliestTime>$trend$</earliestTime>
@@ -72,7 +72,7 @@
       </single>
     </panel>
     <panel>
-      <single>
+      <single id="indoor_humidity">
         <title>Current Indoor Humidity</title>
         <searchString>| tstats prestats=t values(Netatmo_Data.humidity) AS humidity from datamodel=Netatmo where Netatmo_Data.station="$station$" Netatmo_Data.type_label="Base Station" by _time | sort - _time | stats first(Netatmo_Data.humidity) as humidity, last(Netatmo_Data.humidity) AS last_humidity | eval change=round(humidity-last_humidity, 1) | eval trendClass=if(change&gt;0,"increase","decrease") | eval change=if(change&gt;0,tostring("+".change."%"),tostring(change."%")) | fields - last_humidity</searchString>
         <earliestTime>$trend$</earliestTime>
@@ -84,7 +84,7 @@
         <option name="changeField">change</option>
         <option name="trendClassField">trendClass</option>
       </single>
-      <single>
+      <single id="outdoor_humidity">
         <title>Current Outdoor Humidity</title>
         <searchString>| tstats prestats=t values(Netatmo_Data.humidity) AS humidity from datamodel=Netatmo where Netatmo_Data.station="$station$" Netatmo_Data.type_label="Outdoor Module" by _time | sort - _time | stats first(Netatmo_Data.humidity) as humidity, last(Netatmo_Data.humidity) AS last_humidity | eval change=round(humidity-last_humidity, 1) | eval trendClass=if(change&gt;0,"increase","decrease") | eval change=if(change&gt;0,tostring("+".change."%"),tostring(change."%")) | fields - last_humidity</searchString>
         <earliestTime>$trend$</earliestTime>
