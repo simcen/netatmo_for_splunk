@@ -15,7 +15,8 @@ require(['jquery', 'underscore', 'splunkjs/mvc','splunkjs/mvc/utils','splunkjs/m
     	}
     	var fields = _.map(results.collection().toJSON(), function(item) { return { pressure_area : item.pressure_area}; });
     	console.debug("fields", fields);
-    	$("#pressure .panel-body").prepend('<div id="pressure_icon"><img src="/static/app/netatmo/' + fields[0].pressure_area +'.png" /></div>');
+    	$("#pressure_icon").remove();
+    	$("#pressure .panel-body").prepend('<div id="pressure_icon"><img src="/static/app/netatmo/' + fields[0].pressure_area +'.png" alt="'+ fields[0].pressure_area +' pressure area" /></div>');
 	});
 
 });
