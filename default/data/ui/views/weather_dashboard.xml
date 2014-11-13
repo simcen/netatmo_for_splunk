@@ -5,12 +5,12 @@
     <input type="dropdown" token="station" searchWhenChanged="true">
       <label>Select a Station (required):</label>
       <default>*</default>
-      <populatingSearch earliest="$earliest$" latest="$latest$" fieldForLabel="station" fieldForValue="station">| inputlookup netatmo_stations | fields station</populatingSearch>
+      <populatingSearch earliest="$earliest$" latest="$latest$" fieldForLabel="station" fieldForValue="station">| inputlookup netatmo_stations | dedup station | fields station</populatingSearch>
     </input>
     <input type="dropdown" token="module_name" searchWhenChanged="true">
       <label>Select a Module (required):</label>
       <default>*</default>
-      <populatingSearch earliest="-7d@h" latest="now" fieldForLabel="module_name" fieldForValue="module_name">| inputlookup netatmo_stations | search station="$station$"  | fields module_name</populatingSearch>
+      <populatingSearch earliest="-7d@h" latest="now" fieldForLabel="module_name" fieldForValue="module_name">| inputlookup netatmo_stations | search station="$station$"  | dedup module_name | fields module_name</populatingSearch>
     </input>
     <input type="dropdown" token="trend" searchWhenChanged="true">
       <label>Trends for:</label>

@@ -6,7 +6,7 @@
       <default>*</default>
       <choice value="*">All</choice>
       <populatingSearch fieldForValue="station" fieldForLabel="station">
-        <![CDATA[ | inputlookup netatmo_stations | fields station ]]>
+        <![CDATA[ | inputlookup netatmo_stations | dedup station | fields station ]]>
       </populatingSearch>
     </input>
     <input type="dropdown" token="type" searchWhenChanged="true">
@@ -14,7 +14,7 @@
       <default>*</default>
       <choice value="*">All</choice>
       <populatingSearch fieldForValue="type" fieldForLabel="type_label">
-        <![CDATA[ | inputlookup netatmo_stations | search station="$station$" | fields type,type_label ]]>
+        <![CDATA[ | inputlookup netatmo_stations | search station="$station$" | dedup type,type_label | fields type,type_label ]]>
       </populatingSearch>
     </input>
     <input type="dropdown" token="module_name" searchWhenChanged="true">
@@ -22,7 +22,7 @@
       <default>*</default>
       <choice value="*">All</choice>
       <populatingSearch fieldForValue="module_name" fieldForLabel="module_name">
-        <![CDATA[ | inputlookup netatmo_stations | search station="$station$" type="$type$" | fields module_name ]]>
+        <![CDATA[ | inputlookup netatmo_stations | search station="$station$" type="$type$" | dedup module_name | fields module_name ]]>
       </populatingSearch>
     </input>
     <input type="time" searchWhenChanged="true">
