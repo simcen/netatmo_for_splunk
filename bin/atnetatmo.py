@@ -36,6 +36,7 @@ else:
 logger.basicConfig(level=logger.DEBUG, format='%(asctime)s %(levelname)s %(message)s',
                    filename=os.path.join(os.environ['SPLUNK_HOME'],'var','log','splunk','netatmo.log'),
                    filemode='a')
+logger.setLevel("ERROR")
 
 # Read configuration files
 try:
