@@ -119,7 +119,7 @@
                     "editable": true,
                     "displayName": "pressure_area",
                     "comment": "",
-                    "fieldSearch": "pressure_area=*"
+                    "fieldSearch": ""
                 },
                 {
                     "fieldName": "co2",
@@ -500,6 +500,18 @@
                     "fieldSearch": ""
                 },
                 {
+                    "fieldName": "pressure_area",
+                    "owner": "Netatmo_Data",
+                    "type": "string",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false,
+                    "editable": true,
+                    "displayName": "pressure_area",
+                    "comment": "",
+                    "fieldSearch": ""
+                },
+                {
                     "fieldName": "co2",
                     "owner": "Netatmo_Data",
                     "type": "number",
@@ -572,7 +584,63 @@
                     "fieldSearch": ""
                 }
             ],
-            "calculations": [],
+            "calculations": [
+                {
+                    "outputFields": [
+                        {
+                            "fieldName": "dewpoint",
+                            "owner": "Netatmo_Data.Outdoor_Module",
+                            "type": "number",
+                            "required": false,
+                            "multivalue": false,
+                            "hidden": false,
+                            "editable": true,
+                            "displayName": "dewpoint",
+                            "comment": "",
+                            "fieldSearch": "",
+                            "lookupOutputFieldName": "dewpoint"
+                        }
+                    ],
+                    "calculationType": "Lookup",
+                    "lookupName": "dewpoint",
+                    "comment": "",
+                    "lookupInputs": [
+                        {
+                            "inputField": "temperature",
+                            "lookupField": "temperature"
+                        },
+                        {
+                            "inputField": "humidity",
+                            "lookupField": "humidity"
+                        }
+                    ],
+                    "owner": "Netatmo_Data.Outdoor_Module",
+                    "calculationID": "46tzcsa3az1wnrk9",
+                    "editable": true
+                },
+                {
+                    "outputFields": [
+                        {
+                            "fieldName": "muggy",
+                            "owner": "Netatmo_Data.Outdoor_Module",
+                            "type": "number",
+                            "required": true,
+                            "multivalue": false,
+                            "hidden": false,
+                            "editable": true,
+                            "displayName": "muggy",
+                            "comment": "",
+                            "fieldSearch": "muggy=*"
+                        }
+                    ],
+                    "calculationID": "ediawi2oj4avpldi",
+                    "owner": "Netatmo_Data.Outdoor_Module",
+                    "editable": true,
+                    "comment": "",
+                    "calculationType": "Eval",
+                    "expression": "case(dewpoint>16,1)"
+                }
+            ],
             "constraints": [
                 {
                     "search": "type_label=\"Outdoor Module\"",
@@ -681,6 +749,18 @@
                     "displayName": "pressure",
                     "comment": "",
                     "fieldSearch": "pressure=*"
+                },
+                {
+                    "fieldName": "pressure_area",
+                    "owner": "Netatmo_Data",
+                    "type": "string",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false,
+                    "editable": true,
+                    "displayName": "pressure_area",
+                    "comment": "",
+                    "fieldSearch": ""
                 },
                 {
                     "fieldName": "co2",
@@ -862,6 +942,18 @@
                     "hidden": true,
                     "editable": true,
                     "displayName": "pressure",
+                    "comment": "",
+                    "fieldSearch": ""
+                },
+                {
+                    "fieldName": "pressure_area",
+                    "owner": "Netatmo_Data",
+                    "type": "string",
+                    "required": false,
+                    "multivalue": false,
+                    "hidden": false,
+                    "editable": true,
+                    "displayName": "pressure_area",
                     "comment": "",
                     "fieldSearch": ""
                 },
