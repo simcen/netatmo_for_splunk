@@ -3,17 +3,6 @@ This scripts provides access to Netatmo API inside a Splunk App
 The response is handled by a wrapper script (getdata.py) that prepares the JSON data output.
 License: Public Domain CC0
 Inspired by https://github.com/philippelt/netatmo-api-python...  cleaned all I do not need.
-Author: meno@atremar.com, 10.10.2013
-
-Infos that go into the change history:
-- newest entry @ the beginning
-- who changed
-- what was changed
-
-History
-2013.10.10  meno@atremar.com - Initial Version
-2014.01.01  sinloft@gmail.com - Enabled reading the co2 values of additional indoor modules
-
 """
 
 import os, sys
