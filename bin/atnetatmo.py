@@ -23,6 +23,7 @@ import hashlib
 import base64
 import uuid
 import logging as logger
+import splunk.entity as entity
 
 
 
@@ -33,56 +34,106 @@ else:
     from urllib import urlencode
     import urllib2
 
-logger.basicConfig(level=logger.DEBUG, format='%(asctime)s %(levelname)s %(message)s',
+logger.basicConfig(level=logger.ERROR, format='%(asctime)s %(levelname)s %(message)s',
                    filename=os.path.join(os.environ['SPLUNK_HOME'],'var','log','splunk','netatmo.log'),
                    filemode='a')
-logger.setLevel("ERROR")
 
-# Read configuration files
-try:
-    parser = ConfigParser.SafeConfigParser()
-    conf_base = os.path.abspath(os.path.dirname(sys.argv[0])+"/..")
-    logger.debug("The base path is: %s" % conf_base)
-    conf1 = conf_base+'/default/netatmo.conf'
-    conf2 = conf_base+'/local/netatmo.conf'
 
-    # file in ../local has precedence
-    conf=None
-    if os.access(conf1, os.R_OK):
-       conf = conf1
-    if os.access(conf2, os.R_OK):
-       conf = conf2
-    logger.debug("The selected conf is: %s" % conf)
-    parser.read(conf)
-    if logger.getLevelName == "DEBUG" :
+sessionKey = sys.stdin.readline().strip()
+if len(sessionKey) == 0:
+    sys.stderr.write("Did not receive a session key from splunkd. " +
+                        "Please enable passAuth in inputs.conf for this " +
+                        "script\n")
+    exit(2)  
 
-        for stanza in [ 'auth', 'api' ]:
-            logger.debug('%s stanza exists: %s' % (stanza, parser.has_section(stanza)))
-            for candidate in [ 'username', 'password', 'client-id', 'client-secret' ]:
-                logger.debug('%s.%-12s  : %s' % (stanza, candidate, parser.has_option(stanza, candidate)))
+# Utilities
+# Get credentials from Splunk REST
+def getCredentials(sessionKey):
 
-    if parser.has_section('auth'):
-        confauth = dict(parser.items('auth'))
-    if parser.has_section('api'):
-        confapi = dict(parser.items('api'))
+    myapp = 'netatmo'
+    try:
+      # list all credentials
+      entities = entity.getEntities(['admin', 'passwords'], namespace=myapp,
+                                    owner='nobody', sessionKey=sessionKey)
+    except Exception, e:
+      raise Exception("Could not get %s credentials from splunk. Error: %s"
+                      % (myapp, str(e)))
 
-except ConfigParser.ParsingError, err:
-    print 'Could not parse:', err
-    logger.error(err)
+    # return first set of credentials
+    logger.debug("entities: %s" % str(entities.items()))
+    for i, c in entities.items():
+        return c['username'], c['clear_password']
+
+    raise Exception("No credentials have been found")  
+
+# Get auth config from Splunk REST
+def getAuthConfig(sessionKey):
+
+    myapp = 'netatmo'
+    try:
+      # list all credentials
+      entities = entity.getEntities(['admin', 'netatmo_config'], namespace=myapp,
+                                    owner='nobody', sessionKey=sessionKey)
+    except Exception, e:
+      raise Exception("Could not get %s credentials from splunk. Error: %s"
+                      % (myapp, str(e)))
+
+    # return first set of credentials
+    logger.debug("auth entities: %s" % str(entities['auth']))
+    #for i, c in entities['auth']:
+    return entities['auth']['client-id'], entities['auth']['client-secret']
+    
+
+    raise Exception("No auth settings have been found")    
+
+# Get api config from Splunk REST
+def getApiConfig(sessionKey):
+
+    myapp = 'netatmo'
+    try:
+      # list all credentials
+      entities = entity.getEntities(['admin', 'netatmo_config'], namespace=myapp,
+                                    owner='nobody', sessionKey=sessionKey)
+    except Exception, e:
+      raise Exception("Could not get %s credentials from splunk. Error: %s"
+                      % (myapp, str(e)))
+
+    # return first set of credentials
+    logger.debug("api entities: %s" % str(entities['api']))
+    return entities['api']['base'], entities['api']['authorization'], entities['api']['getuser'], entities['api']['devicelist'], entities['api']['getmeasure']
+
+    raise Exception("No api settings have been found")      
+
 
 # User specs
-_CLIENT_ID     = confauth.get("client-id")
-_CLIENT_SECRET = confauth.get("client-secret")
-_USERNAME      = confauth.get("username")
-_PASSWORD      = confauth.get("password")
+# Get username and password from splunk's secure credential storage
+_USERNAME, _PASSWORD        = getCredentials(sessionKey)
 
-# netatmo URLs
-_BASE_URL       = "http://" + confapi.get("base") + "/"
-_AUTH_REQ       = _BASE_URL + confapi.get("authorization")
-_GETUSER_REQ    = _BASE_URL + confapi.get("getuser")
-_DEVICELIST_REQ = _BASE_URL + confapi.get("devicelist")
-_GETMEASURE_REQ = _BASE_URL + confapi.get("getmeasure")
+# Get auth and api settings from netatmo.conf
+_CLIENT_ID, _CLIENT_SECRET  = getAuthConfig(sessionKey)
+_BASE_URL, _AUTH_REQ, _GETUSER_REQ, _DEVICELIST_REQ, _GETMEASURE_REQ = getApiConfig(sessionKey)
+_BASE_URL = "http://" + _BASE_URL + "/"
+_AUTH_REQ = _BASE_URL + _AUTH_REQ
+_GETUSER_REQ = _BASE_URL + _GETUSER_REQ
+_DEVICELIST_REQ = _BASE_URL + _DEVICELIST_REQ
+_GETMEASURE_REQ = _BASE_URL + _GETMEASURE_REQ
 
+
+def postRequest(url, params):
+      
+    logger.debug("Posting to url: %s with params: %s" % (url,params))
+    if sys.version_info[0] == 3:
+        req = urllib.request.Request(url)
+        req.add_header("Content-Type","application/x-www-form-urlencoded;charset=utf-8")
+        params = urllib.parse.urlencode(params).encode('utf-8')
+        resp = urllib.request.urlopen(req, params).readall().decode("utf-8")
+    else:
+        params = urlencode(params)
+        headers = {"Content-Type" : "application/x-www-form-urlencoded;charset=utf-8"}
+        req = urllib2.Request(url=url, data=params, headers=headers)
+        resp = urllib2.urlopen(req).read()
+    return json.loads(resp)
+    
 
 class ClientAuth:
     "Request authentication and keep access token available through token method. Renew it automatically if necessary"
@@ -94,7 +145,7 @@ class ClientAuth:
 
         postParams = {
                 "grant_type" : "password",
-		"scope" : "read_station",
+                "scope" : "read_station",
                 "client_id" : clientId,
                 "client_secret" : clientSecret,
                 "username" : username,
@@ -155,7 +206,7 @@ class DeviceList:
                 }
         self.resp = postRequest(_DEVICELIST_REQ, postParams)
         self.rawData = self.resp['body']
-        logger.debug("Got a response %s." % json.dumps(self.resp['body'],sort_keys=True, indent=4))
+        #logger.debug("Got a response %s." % json.dumps(self.resp['body'],sort_keys=True, indent=4))
         self.stations = {}
         for d in self.rawData['devices'] : self.stations[d['_id']] = d
         self.modules = {}
@@ -189,37 +240,13 @@ class DeviceList:
         return None
 
 
-# Utilities
-
-def postRequest(url, params):
-      
-    logger.debug("Posting to url: %s with params: %s" % (url,params))
-    if sys.version_info[0] == 3:
-        req = urllib.request.Request(url)
-        req.add_header("Content-Type","application/x-www-form-urlencoded;charset=utf-8")
-        params = urllib.parse.urlencode(params).encode('utf-8')
-        resp = urllib.request.urlopen(req, params).readall().decode("utf-8")
-    else:
-        params = urlencode(params)
-        headers = {"Content-Type" : "application/x-www-form-urlencoded;charset=utf-8"}
-        req = urllib2.Request(url=url, data=params, headers=headers)
-        resp = urllib2.urlopen(req).read()
-    return json.loads(resp)
-
-
 
 if __name__ == "__main__":
 
     from sys import exit, stderr
 
     if not _CLIENT_ID or not _CLIENT_SECRET or not _USERNAME or not _PASSWORD :
-           stderr.write("Missing arguments to check lnetatmo.py")
+           stderr.write("Missing arguments to check anetatmo.py")
            exit(1)
 
-#    authorization = ClientAuth()                # Test authentication method
-#    user = User(authorization)                  # Test GETUSER
-#    devList = DeviceList(authorization)         # Test DEVICELIST
-#    devList.MinMaxTH()                          # Test GETMEASURE
-
-    # If we reach this line, all is OK
     exit(0)

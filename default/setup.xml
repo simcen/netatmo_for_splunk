@@ -1,0 +1,30 @@
+<setup>
+	<block title="Configure Netatmo credentials" endpoint="storage/passwords" entity="_new">
+		<text>
+			Enter your Netatmo email adress and password.
+		</text>		
+		<input field="name">
+			<label>Username</label>
+			<type>text</type>
+		</input>
+
+		<input field="password">
+			<label>Password</label>
+			<type>password</type>
+		</input>
+		<text><![CDATA[<b>Note:</b>The password is stored encrypted (see $SPLUNK_HOME/etc/apps/netatmo/local/app.conf after saving.]]></text>
+	</block>		
+	<block title="Configure Netatmo OAuth settings">
+		<text><![CDATA[
+			Enter OAuth from <a href="https://dev.netatmo.com/dev/listapps">your Netatmo app</a>. If you don't have already created an app, <a href="https://dev.netatmo.com/dev/createapp">do so</a>.]]>
+		</text>
+		<input field="client-id" endpoint="admin/netatmo_config" entity="auth">
+			<label>Client ID</label>
+			<type>text</type>
+		</input>
+		<input field="client-secret" endpoint="admin/netatmo_config" entity="auth">
+			<label>Client Secret</label>
+			<type>text</type>
+		</input>
+	</block>
+</setup>

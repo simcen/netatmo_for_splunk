@@ -17,20 +17,6 @@ auth = atnetatmo.ClientAuth()
 devList = atnetatmo.DeviceList(auth)
 user = atnetatmo.User(auth)
 
-
-# get all data from devicelist endpoint
-#lastdata = devList.getAll()
-
-# JSON output
-#print json.dumps(lastdata)
-
-# get all data from devicelist endpoint
-#lastdata = devList.techdata2splunk()
-
-# JSON output
-#print json.dumps(lastdata)
-
-
 for key,value in devList.techdata2splunk().iteritems():
     # Trying to match modules & stations to owners
     if value['_id']in user.devList :
