@@ -6,7 +6,7 @@ class ConfigApp(admin.MConfigHandler):
 
 	def setup(self):
 		if self.requestedAction == admin.ACTION_EDIT:
-			for arg in ['client-id', 'client-secret']:
+			for arg in ['client-id', 'client-secret', 'base', 'authorization', 'getuser', 'devicelist', 'getmeasure']:
 				self.supportedArgs.addOptArg(arg)
 				
 	def handleList(self, confInfo):
