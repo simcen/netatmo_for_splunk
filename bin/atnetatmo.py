@@ -101,7 +101,7 @@ _USERNAME, _PASSWORD        = getCredentials(sessionKey)
 # Get auth and api settings from netatmo.conf
 _CLIENT_ID, _CLIENT_SECRET  = getAuthConfig(sessionKey)
 _BASE_URL, _AUTH_REQ, _GETUSER_REQ, _DEVICELIST_REQ, _GETMEASURE_REQ = getApiConfig(sessionKey)
-_BASE_URL = "http://" + _BASE_URL + "/"
+_BASE_URL = "https://" + _BASE_URL + "/"
 _AUTH_REQ = _BASE_URL + _AUTH_REQ
 _GETUSER_REQ = _BASE_URL + _GETUSER_REQ
 _DEVICELIST_REQ = _BASE_URL + _DEVICELIST_REQ
