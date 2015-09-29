@@ -1,6 +1,6 @@
-<form script="weather_dashboard.js, single_trend.js" stylesheet="weather_dashboard.css, single_trend.css">
+<form>
   <label>Weather Dashboard</label>
-  <description/>
+  <description></description>
   <fieldset autoRun="true" submitButton="true">
     <input type="dropdown" token="station" searchWhenChanged="true">
       <label>Select a Station (required):</label>
@@ -12,56 +12,71 @@
       <default>*</default>
       <populatingSearch earliest="-7d@h" latest="now" fieldForLabel="module_name" fieldForValue="module_name">| inputlookup netatmo_stations | search station="$station$"  | dedup module_name | fields module_name</populatingSearch>
     </input>
-    <input type="dropdown" token="trend" searchWhenChanged="true">
-      <label>Trends for:</label>
-      <choice value="-1h">1 Hour</choice>
-      <choice value="-6h">6 Hours</choice>
-      <choice value="-12h">12 Hours</choice>
-      <choice value="-24h">24 Hours</choice>
-      <default>-1h</default>
-    </input>
     <input type="time" searchWhenChanged="true">
-      <label/>
+      <label></label>
       <default>
-        <earliestTime>-7d@h</earliestTime>
-        <latestTime>now</latestTime>
+        <earliest>@d</earliest>
+        <latest>now</latest>
       </default>
     </input>
   </fieldset>
   <row>
     <panel>
       <single id="indoor_temperature">
-        <title>Current Indoor Temperature</title>
+        <search>
+          <query>| tstats values(Netatmo_Data.temperature) AS temperature from datamodel=Netatmo where Netatmo_Data.station="$station$" Netatmo_Data.type_label="Base Station" by _time</query>
+        </search>
         <!--<searchString>| tstats first(Netatmo_Data.temperature) AS temperature from datamodel=Netatmo where Netatmo_Data.station="*" Netatmo_Data.type_label="Base Station"</searchString>-->
-        <searchString>| tstats prestats=t values(Netatmo_Data.temperature) AS temperature from datamodel=Netatmo where Netatmo_Data.station="$station$" Netatmo_Data.type_label="Base Station" by _time | sort - _time | stats first(Netatmo_Data.temperature) as temperature, last(Netatmo_Data.temperature) AS last_temp | eval change=round(temperature-last_temp, 1) | eval trendClass=if(change&gt;0,"increase","decrease") | eval change=if(change&gt;0,tostring("+".change."°C"),tostring(change."°C")) | fields - last_temp</searchString>
-        <earliestTime>$trend$</earliestTime>
-        <latestTime>now</latestTime>
         <option name="drilldown">none</option>
         <option name="linkView">search</option>
         <option name="afterLabel">°C</option>
         <option name="field">temperature</option>
         <option name="changeField">change</option>
         <option name="trendClassField">trendClass</option>
+        <option name="colorBy">value</option>
+        <option name="colorMode">block</option>
+        <option name="numberPrecision">0.0</option>
+        <option name="rangeColors">["0x7F94B0","0x7F94B0"]</option>
+        <option name="rangeValues">[0]</option>
+        <option name="showSparkline">1</option>
+        <option name="showTrendIndicator">1</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="trendInterval">auto</option>
+        <option name="useColors">1</option>
+        <option name="useThousandSeparators">1</option>
+        <option name="underLabel">Current Indoor Temperature</option>
       </single>
       <single id="outdoor_temperature">
-        <title>Current Outdoor Temperature</title>
-        <searchString>| tstats prestats=t values(Netatmo_Data.temperature) AS temperature from datamodel=Netatmo where Netatmo_Data.station="$station$" Netatmo_Data.type_label="Outdoor Module" by _time | sort - _time | stats first(Netatmo_Data.temperature) as temperature, last(Netatmo_Data.temperature) AS last_temp | eval change=round(temperature-last_temp, 1) | eval trendClass=if(change&gt;0,"increase","decrease") | eval change=if(change&gt;0,tostring("+".change."°C"),tostring(change."°C")) | fields - last_temp</searchString>
-        <earliestTime>$trend$</earliestTime>
-        <latestTime>now</latestTime>
+        <search>
+          <query>| tstats values(Netatmo_Data.temperature) AS temperature from datamodel=Netatmo where Netatmo_Data.station="$station$" Netatmo_Data.type_label="Outdoor Module" by _time</query>
+        </search>
         <option name="drilldown">none</option>
         <option name="linkView">search</option>
         <option name="afterLabel">°C</option>
         <option name="field">temperature</option>
         <option name="changeField">change</option>
         <option name="trendClassField">trendClass</option>
+        <option name="colorBy">value</option>
+        <option name="colorMode">block</option>
+        <option name="numberPrecision">0.0</option>
+        <option name="rangeColors">["0x587EB0","0x587EB0"]</option>
+        <option name="rangeValues">[0]</option>
+        <option name="showSparkline">1</option>
+        <option name="showTrendIndicator">1</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="trendInterval">auto</option>
+        <option name="useColors">1</option>
+        <option name="useThousandSeparators">1</option>
+        <option name="underLabel">Current Outdoor Temperature</option>
       </single>
     </panel>
     <panel>
       <single id="pressure">
-        <title>Current Pressure</title>
-        <searchString>| tstats prestats=t values(Netatmo_Data.pressure) AS pressure, values(Netatmo_Data.pressure_area) from datamodel=Netatmo where Netatmo_Data.station="$station$" Netatmo_Data.type_label="Base Station" by _time Netatmo_Data.pressure_area | sort - _time | stats first(Netatmo_Data.pressure) as pressure, last(Netatmo_Data.pressure) AS last_pressure, first(Netatmo_Data.pressure_area) AS pressure_area | eval change=round(pressure-last_pressure, 1) | eval trendClass=if(change>0,"increase","decrease") | eval change=if(change>0,tostring("+".change."hPa"),tostring(change."hPa")) | fields - last_pressure</searchString>
-        <earliestTime>$trend$</earliestTime>
-        <latestTime>now</latestTime>
+        <search>
+          <query>| tstats values(Netatmo_Data.pressure) AS pressure from datamodel=Netatmo where Netatmo_Data.station="$station$" Netatmo_Data.type_label="Base Station" by _time</query>
+        </search>
         <option name="drilldown">none</option>
         <option name="afterLabel">hPa</option>
         <option name="linkView">search</option>
@@ -69,32 +84,69 @@
         <option name="changeField">change</option>
         <option name="trendClassField">trendClass</option>
         <option name="classField">pressure_area</option>
+        <option name="colorBy">value</option>
+        <option name="colorMode">block</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0x536E91","0x536E91"]</option>
+        <option name="rangeValues">[0]</option>
+        <option name="showSparkline">1</option>
+        <option name="showTrendIndicator">1</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="trendInterval">auto</option>
+        <option name="useColors">1</option>
+        <option name="useThousandSeparators">1</option>
+        <option name="underLabel">Current Pressure</option>
       </single>
     </panel>
     <panel>
       <single id="indoor_humidity">
-        <title>Current Indoor Humidity</title>
-        <searchString>| tstats prestats=t values(Netatmo_Data.humidity) AS humidity from datamodel=Netatmo where Netatmo_Data.station="$station$" Netatmo_Data.type_label="Base Station" by _time | sort - _time | stats first(Netatmo_Data.humidity) as humidity, last(Netatmo_Data.humidity) AS last_humidity | eval change=round(humidity-last_humidity, 1) | eval trendClass=if(change&gt;0,"increase","decrease") | eval change=if(change&gt;0,tostring("+".change."%"),tostring(change."%")) | fields - last_humidity</searchString>
-        <earliestTime>$trend$</earliestTime>
-        <latestTime>now</latestTime>
+        <search>
+          <query>| tstats values(Netatmo_Data.humidity) AS humidity from datamodel=Netatmo where Netatmo_Data.station="$station$" Netatmo_Data.type_label="Base Station" by _time</query>
+        </search>
         <option name="drilldown">none</option>
         <option name="afterLabel">%</option>
         <option name="linkView">search</option>
         <option name="field">humidity</option>
         <option name="changeField">change</option>
         <option name="trendClassField">trendClass</option>
+        <option name="colorBy">value</option>
+        <option name="colorMode">block</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0x8A7460","0x8A7460"]</option>
+        <option name="rangeValues">[0]</option>
+        <option name="showSparkline">1</option>
+        <option name="showTrendIndicator">1</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="trendInterval">auto</option>
+        <option name="useColors">1</option>
+        <option name="useThousandSeparators">1</option>
+        <option name="underLabel">Current Indoor Humidity</option>
       </single>
       <single id="outdoor_humidity">
-        <title>Current Outdoor Humidity</title>
-        <searchString>| tstats prestats=t values(Netatmo_Data.humidity) AS humidity from datamodel=Netatmo where Netatmo_Data.station="$station$" Netatmo_Data.type_label="Outdoor Module" by _time | sort - _time | stats first(Netatmo_Data.humidity) as humidity, last(Netatmo_Data.humidity) AS last_humidity | eval change=round(humidity-last_humidity, 1) | eval trendClass=if(change&gt;0,"increase","decrease") | eval change=if(change&gt;0,tostring("+".change."%"),tostring(change."%")) | fields - last_humidity</searchString>
-        <earliestTime>$trend$</earliestTime>
-        <latestTime>now</latestTime>
+        <search>
+          <query>| tstats values(Netatmo_Data.humidity) AS humidity from datamodel=Netatmo where Netatmo_Data.station="$station$" Netatmo_Data.type_label="Outdoor Module" by _time</query>
+        </search>
         <option name="drilldown">none</option>
         <option name="afterLabel">%</option>
         <option name="linkView">search</option>
         <option name="field">humidity</option>
         <option name="changeField">change</option>
         <option name="trendClassField">trendClass</option>
+        <option name="colorBy">value</option>
+        <option name="colorMode">block</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0xB09378","0xB09378"]</option>
+        <option name="rangeValues">[0]</option>
+        <option name="showSparkline">1</option>
+        <option name="showTrendIndicator">1</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="trendInterval">auto</option>
+        <option name="useColors">1</option>
+        <option name="useThousandSeparators">1</option>
+        <option name="underLabel">Current Outdoor Humidity</option>
       </single>
     </panel>
   </row>
@@ -102,9 +154,9 @@
     <panel>
       <chart>
         <title>Humidity vs. Temperature ($module_name$)</title>
-        <searchString>| tstats prestats=t avg(Netatmo_Data.temperature) AS temperature, avg(Netatmo_Data.humidity) AS humidity from datamodel=Netatmo where Netatmo_Data.station="$station$" Netatmo_Data.type_label="*" Netatmo_Data.module_name="$module_name$" by Netatmo_Data.device, _time span=30m  | timechart bins=50 span=30m avg(Netatmo_Data.humidity) AS Humidity, avg(Netatmo_Data.temperature) AS Temperature</searchString>
-        <earliestTime>$earliest$</earliestTime>
-        <latestTime>$latest$</latestTime>
+        <search>
+          <query>| tstats prestats=t avg(Netatmo_Data.temperature) AS temperature, avg(Netatmo_Data.humidity) AS humidity from datamodel=Netatmo where Netatmo_Data.station="$station$" Netatmo_Data.type_label="*" Netatmo_Data.module_name="$module_name$" by Netatmo_Data.device, _time span=30m  | timechart bins=50 span=30m avg(Netatmo_Data.humidity) AS Humidity, avg(Netatmo_Data.temperature) AS Temperature</query>
+        </search>
         <option name="charting.axisTitleX.visibility">collapsed</option>
         <option name="charting.axisTitleY.visibility">visible</option>
         <option name="charting.axisX.scale">linear</option>
@@ -121,18 +173,23 @@
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
         <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
         <option name="charting.axisTitleY2.visibility">visible</option>
-        <option name="charting.axisY2.enabled">true</option>
+        <option name="charting.axisY2.enabled">1</option>
         <option name="charting.axisY2.scale">linear</option>
         <option name="charting.chart.overlayFields">Temperature</option>
         <option name="charting.fieldColors">{"Humidity": 0x639BF1, "Temperature":0xFF5A09}</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
       </chart>
     </panel>
     <panel>
       <chart>
         <title>Hourly Average vs. Daily Min/Max Temperature ($module_name$)</title>
-        <searchString>| tstats prestats=t avg(Netatmo_Data.temperature) AS temperature from datamodel=Netatmo where Netatmo_Data.station="$station$" Netatmo_Data.type_label="*" Netatmo_Data.module_name="$module_name$" by Netatmo_Data.device, _time span=1h  | timechart span=1h avg(Netatmo_Data.temperature) AS "Hourly Average" | append [| tstats prestats=t max(Netatmo_Data.temperature) AS temperature from datamodel=Netatmo where Netatmo_Data.station="$station$" Netatmo_Data.type_label="*" Netatmo_Data.module_name="$module_name$" by _time span=1d | timechart max(Netatmo_Data.temperature) AS "Daily Maximum" ] | append [| tstats prestats=t min(Netatmo_Data.temperature) AS temperature from datamodel=Netatmo where Netatmo_Data.station="$station$" Netatmo_Data.type_label="*" Netatmo_Data.module_name="$module_name$" by _time span=1d | timechart min(Netatmo_Data.temperature) AS "Daily Minimum" ] | sort _time</searchString>
-        <earliestTime>$earliest$</earliestTime>
-        <latestTime>$latest$</latestTime>
+        <search>
+          <query>| tstats prestats=t avg(Netatmo_Data.temperature) AS temperature from datamodel=Netatmo where Netatmo_Data.station="$station$" Netatmo_Data.type_label="*" Netatmo_Data.module_name="$module_name$" by Netatmo_Data.device, _time span=1h  | timechart span=1h avg(Netatmo_Data.temperature) AS "Hourly Average" | append [| tstats prestats=t max(Netatmo_Data.temperature) AS temperature from datamodel=Netatmo where Netatmo_Data.station="$station$" Netatmo_Data.type_label="*" Netatmo_Data.module_name="$module_name$" by _time span=1d | timechart max(Netatmo_Data.temperature) AS "Daily Maximum" ] | append [| tstats prestats=t min(Netatmo_Data.temperature) AS temperature from datamodel=Netatmo where Netatmo_Data.station="$station$" Netatmo_Data.type_label="*" Netatmo_Data.module_name="$module_name$" by _time span=1d | timechart min(Netatmo_Data.temperature) AS "Daily Minimum" ] | sort _time</query>
+        </search>
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
         <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
         <option name="charting.axisTitleX.visibility">visible</option>
@@ -140,7 +197,7 @@
         <option name="charting.axisTitleY2.visibility">visible</option>
         <option name="charting.axisX.scale">linear</option>
         <option name="charting.axisY.scale">linear</option>
-        <option name="charting.axisY2.enabled">false</option>
+        <option name="charting.axisY2.enabled">0</option>
         <option name="charting.axisY2.scale">inherit</option>
         <option name="charting.chart">line</option>
         <option name="charting.chart.nullValueMode">connect</option>
@@ -153,6 +210,11 @@
         <option name="charting.legend.placement">bottom</option>
         <option name="charting.axisTitleY.text">°C</option>
         <option name="charting.fieldColors">{"Daily Minimum": 0x639BF1, "Daily Maximum":0xFF5A09, "Hourly Average":0xffdf09}</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
       </chart>
     </panel>
   </row>
