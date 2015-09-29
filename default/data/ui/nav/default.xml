@@ -1,4 +1,4 @@
-<nav search_view="search" color="#929ea5">
+<nav search_view="search" color="#54919a">
   <view name="weather_dashboard" default="true" />
   <view name="netatmo_metrics" />
   <view name="periodenvergleich" />

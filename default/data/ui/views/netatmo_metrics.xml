@@ -1,5 +1,5 @@
 <form>
-  <label>Netatmo Metrics Viewer</label>
+  <label>netatmo Metrics Viewer</label>
   <fieldset autoRun="true" submitButton="true">
     <input type="dropdown" token="station" searchWhenChanged="true">
       <label>Select a Station:</label>
