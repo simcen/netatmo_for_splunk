@@ -23,7 +23,7 @@ else:
     from urllib import urlencode
     import urllib2
 
-logger.basicConfig(level=logger.ERROR, format='%(asctime)s %(levelname)s %(message)s',
+logger.basicConfig(level=logger.DEBUG, format='%(asctime)s %(levelname)s %(message)s',
                    filename=os.path.join(os.environ['SPLUNK_HOME'],'var','log','splunk','netatmo.log'),
                    filemode='a')
 
@@ -33,7 +33,7 @@ if len(sessionKey) == 0:
     sys.stderr.write("Did not receive a session key from splunkd. " +
                         "Please enable passAuth in inputs.conf for this " +
                         "script\n")
-    exit(2)  
+    exit(2)
 
 # Utilities
 # Get credentials from Splunk REST
@@ -53,7 +53,7 @@ def getCredentials(sessionKey):
     for i, c in entities.items():
         return c['username'], c['clear_password']
 
-    raise Exception("No credentials have been found")  
+    raise Exception("No credentials have been found")
 
 # Get auth config from Splunk REST
 def getAuthConfig(sessionKey):
@@ -71,9 +71,9 @@ def getAuthConfig(sessionKey):
     logger.debug("auth entities: %s" % str(entities['auth']))
     #for i, c in entities['auth']:
     return entities['auth']['client-id'], entities['auth']['client-secret']
-    
 
-    raise Exception("No auth settings have been found")    
+
+    raise Exception("No auth settings have been found")
 
 # Get api config from Splunk REST
 def getApiConfig(sessionKey):
@@ -91,7 +91,7 @@ def getApiConfig(sessionKey):
     logger.debug("api entities: %s" % str(entities['api']))
     return entities['api']['base'], entities['api']['authorization'], entities['api']['getuser'], entities['api']['devicelist'], entities['api']['getmeasure']
 
-    raise Exception("No api settings have been found")      
+    raise Exception("No api settings have been found")
 
 
 # User specs
@@ -109,7 +109,7 @@ _GETMEASURE_REQ = _BASE_URL + _GETMEASURE_REQ
 
 
 def postRequest(url, params):
-      
+
     logger.debug("Posting to url: %s with params: %s" % (url,params))
     if sys.version_info[0] == 3:
         req = urllib.request.Request(url)
@@ -122,7 +122,7 @@ def postRequest(url, params):
         req = urllib2.Request(url=url, data=params, headers=headers)
         resp = urllib2.urlopen(req).read()
     return json.loads(resp)
-    
+
 
 class ClientAuth:
     "Request authentication and keep access token available through token method. Renew it automatically if necessary"
@@ -207,18 +207,24 @@ class DeviceList:
         return response if len(response) else None
 
 
-    def techdata2splunk(self): 
+    def techdata2splunk(self):
         lastD = {}
         for i,station in self.stations.items():
-            #logger.debug("Station is: %s" % json.dumps(station, sort_keys=True, indent=4))
-            station_dashboard_data = station['dashboard_data']
-            station_meta_data = {"station_name":station['station_name'],"module_name":station["module_name"],"_id":station['_id'],"type":station['type']}
-            lastD[station['_id']] = dict(station_meta_data.items() + station_dashboard_data.items())
+            logger.debug("Station is: %s" % json.dumps(station, sort_keys=True, indent=4))
 
-            for m in station['modules']:
-                module_dashboard_data = self.modules[m]['dashboard_data']
-                module_meta_data = { "station_name":station['station_name'],"module_name":self.modules[m]['module_name'],"_id":m,"station_id":station['_id'],"type":self.modules[m]['type']}
-                lastD[m] = dict(module_meta_data.items() + module_dashboard_data.items())
+
+
+            if 'dashboard_data' in station:
+                station_dashboard_data = station['dashboard_data']
+                station_meta_data = {"station_name":station['station_name'],"module_name":station["module_name"],"_id":station['_id'],"type":station['type']}
+                lastD[station['_id']] = dict(station_meta_data.items() + station_dashboard_data.items())
+
+                for m in station['modules']:
+                    module_dashboard_data = self.modules[m]['dashboard_data']
+                    module_meta_data = { "station_name":station['station_name'],"module_name":self.modules[m]['module_name'],"_id":m,"station_id":station['_id'],"type":self.modules[m]['type']}
+                    lastD[m] = dict(module_meta_data.items() + module_dashboard_data.items())
+            else:
+                logger.warn("No dashboard_data found for station '{}'. Maybe station is offline!".format(station['station_name']))
 
 	#logger.debug("lastD is %s", json.dumps(lastD, sort_keys=True, indent=4))
         return lastD if len(lastD) else None
