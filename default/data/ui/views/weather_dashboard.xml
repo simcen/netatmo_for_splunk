@@ -24,7 +24,7 @@
     <panel>
       <single id="indoor_temperature">
         <search>
-          <query>| tstats values(Netatmo_Data.temperature) AS temperature from datamodel=Netatmo where Netatmo_Data.station="$station$" Netatmo_Data.type_label="Base Station" by _time</query>
+          <query>| tstats avg(Netatmo_Data.temperature) AS temperature from datamodel=Netatmo where Netatmo_Data.station="$station$" Netatmo_Data.type_label="Base Station" by _time</query>
         </search>
         <!--<searchString>| tstats first(Netatmo_Data.temperature) AS temperature from datamodel=Netatmo where Netatmo_Data.station="*" Netatmo_Data.type_label="Base Station"</searchString>-->
         <option name="drilldown">none</option>
@@ -49,7 +49,7 @@
       </single>
       <single id="outdoor_temperature">
         <search>
-          <query>| tstats values(Netatmo_Data.temperature) AS temperature from datamodel=Netatmo where Netatmo_Data.station="$station$" Netatmo_Data.type_label="Outdoor Module" by _time</query>
+          <query>| tstats avg(Netatmo_Data.temperature) AS temperature from datamodel=Netatmo where Netatmo_Data.station="$station$" Netatmo_Data.type_label="Outdoor Module" by _time</query>
         </search>
         <option name="drilldown">none</option>
         <option name="linkView">search</option>
@@ -75,7 +75,7 @@
     <panel>
       <single id="pressure">
         <search>
-          <query>| tstats values(Netatmo_Data.pressure) AS pressure from datamodel=Netatmo where Netatmo_Data.station="$station$" Netatmo_Data.type_label="Base Station" by _time</query>
+          <query>| tstats avg(Netatmo_Data.pressure) AS pressure from datamodel=Netatmo where Netatmo_Data.station="$station$" Netatmo_Data.type_label="Base Station" by _time</query>
         </search>
         <option name="drilldown">none</option>
         <option name="afterLabel">hPa</option>
@@ -102,7 +102,7 @@
     <panel>
       <single id="indoor_humidity">
         <search>
-          <query>| tstats values(Netatmo_Data.humidity) AS humidity from datamodel=Netatmo where Netatmo_Data.station="$station$" Netatmo_Data.type_label="Base Station" by _time</query>
+          <query>| tstats avg(Netatmo_Data.humidity) AS humidity from datamodel=Netatmo where Netatmo_Data.station="$station$" Netatmo_Data.type_label="Base Station" by _time</query>
         </search>
         <option name="drilldown">none</option>
         <option name="afterLabel">%</option>
@@ -126,7 +126,7 @@
       </single>
       <single id="outdoor_humidity">
         <search>
-          <query>| tstats values(Netatmo_Data.humidity) AS humidity from datamodel=Netatmo where Netatmo_Data.station="$station$" Netatmo_Data.type_label="Outdoor Module" by _time</query>
+          <query>| tstats avg(Netatmo_Data.humidity) AS humidity from datamodel=Netatmo where Netatmo_Data.station="$station$" Netatmo_Data.type_label="Outdoor Module" by _time</query>
         </search>
         <option name="drilldown">none</option>
         <option name="afterLabel">%</option>

@@ -212,11 +212,13 @@ class DeviceList:
         for i,station in self.stations.items():
             logger.debug("Station is: %s" % json.dumps(station, sort_keys=True, indent=4))
 
-
+            module_name = 'unknown'
+            if 'module_name' in station:
+                module_name = station["module_name"]
 
             if 'dashboard_data' in station:
                 station_dashboard_data = station['dashboard_data']
-                station_meta_data = {"station_name":station['station_name'],"module_name":station["module_name"],"_id":station['_id'],"type":station['type']}
+                station_meta_data = {"station_name":station['station_name'],"module_name":module_name,"_id":station['_id'],"type":station['type']}
                 lastD[station['_id']] = dict(station_meta_data.items() + station_dashboard_data.items())
 
                 for m in station['modules']:
