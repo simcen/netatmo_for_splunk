@@ -222,9 +222,12 @@ class DeviceList:
                 lastD[station['_id']] = dict(station_meta_data.items() + station_dashboard_data.items())
 
                 for m in station['modules']:
-                    module_dashboard_data = self.modules[m]['dashboard_data']
-                    module_meta_data = { "station_name":station['station_name'],"module_name":self.modules[m]['module_name'],"_id":m,"station_id":station['_id'],"type":self.modules[m]['type']}
-                    lastD[m] = dict(module_meta_data.items() + module_dashboard_data.items())
+                    if 'dashboard_data' in self.modules[m]:
+                        module_dashboard_data = self.modules[m]['dashboard_data']
+                        module_meta_data = { "station_name":station['station_name'],"module_name":self.modules[m]['module_name'],"_id":m,"station_id":station['_id'],"type":self.modules[m]['type']}
+                        lastD[m] = dict(module_meta_data.items() + module_dashboard_data.items())
+                    else:
+                        logger.warn("No dashboard_data found for module '{}'. Maybe module is offline!".format(self.modules[m]['module_name']))
             else:
                 logger.warn("No dashboard_data found for station '{}'. Maybe station is offline!".format(station['station_name']))
 
