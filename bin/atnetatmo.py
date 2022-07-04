@@ -179,8 +179,9 @@ class User:
                 }
         resp = postRequest(_GETUSER_REQ, postParams)
         self.rawData = resp['body']
+        #logger.debug("User: Got a response: %s" % json.dumps(resp['body'],sort_keys=True, indent=4))
         self.user_id = self.rawData['_id']
-        self.devList = self.rawData['devices']
+        #self.devList = self.rawData['devices']
         self.friendDevList = self.rawData['friend_devices']
         self.mail = self.rawData['mail']
 
@@ -195,7 +196,7 @@ class DeviceList:
                 }
         self.resp = postRequest(_DEVICELIST_REQ, postParams)
         self.rawData = self.resp['body']
-        #logger.debug("Got a response %s." % json.dumps(self.resp['body'],sort_keys=True, indent=4))
+        #logger.debug("DeviceList: Got a response: %s" % json.dumps(self.resp['body'],sort_keys=True, indent=4))
         self.stations = {}
         for d in self.rawData['devices'] : self.stations[d['_id']] = d
         self.modules = {}
