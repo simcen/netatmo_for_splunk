@@ -14,17 +14,13 @@ auth = atnetatmo.ClientAuth()
 devList = atnetatmo.DeviceList(auth)
 user = atnetatmo.User(auth)
 
-for key,value in devList.techdata2splunk().iteritems():
+for key,value in devList.techdata2splunk().items():
     # Trying to match modules & stations to owners
-    if value['_id']in user.devList :
-        value['user_id']=user.user_id
-        value['mail']=user.mail
-    elif value['_id']in user.friendDevList :
+    if value['_id']in user.friendDevList :
         value['user_id']="Friend"
         value['mail']="incomplete@api"
     else:
-        value['user_id']="Anon"
-        value['mail']="incomplete@api"
+        value['user_id']=user.user_id
+        value['mail']=user.mail
 
-    print json.dumps(value)
-
+    print(json.dumps(value))

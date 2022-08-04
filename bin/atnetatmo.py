@@ -7,7 +7,7 @@ Inspired by https://github.com/philippelt/netatmo-api-python...  cleaned all I d
 
 import os, sys
 import json, time
-import ConfigParser
+import configparser
 import hashlib
 import base64
 import uuid
@@ -20,8 +20,8 @@ import splunk.entity as entity
 if sys.version_info[0] == 3 :
     import urllib.parse, urllib.request
 else:
-    from urllib import urlencode
-    import urllib2
+    from urllib.parse import urlencode
+    import urllib.request, urllib.error, urllib.parse
 
 logger.basicConfig(level=logger.DEBUG, format='%(asctime)s %(levelname)s %(message)s',
                    filename=os.path.join(os.environ['SPLUNK_HOME'],'var','log','splunk','netatmo.log'),
@@ -44,13 +44,13 @@ def getCredentials(sessionKey):
       # list all credentials
       entities = entity.getEntities(['admin', 'passwords'], namespace=myapp,
                                     owner='nobody', sessionKey=sessionKey)
-    except Exception, e:
+    except Exception as e:
       raise Exception("Could not get %s credentials from splunk. Error: %s"
                       % (myapp, str(e)))
 
     # return first set of credentials
-    logger.debug("entities: %s" % str(entities.items()))
-    for i, c in entities.items():
+    logger.debug("entities: %s" % str(list(entities.items())))
+    for i, c in list(entities.items()):
         return c['username'], c['clear_password']
 
     raise Exception("No credentials have been found")
@@ -63,7 +63,7 @@ def getAuthConfig(sessionKey):
       # list all credentials
       entities = entity.getEntities(['admin', 'netatmo_config'], namespace=myapp,
                                     owner='nobody', sessionKey=sessionKey)
-    except Exception, e:
+    except Exception as e:
       raise Exception("Could not get %s credentials from splunk. Error: %s"
                       % (myapp, str(e)))
 
@@ -83,7 +83,7 @@ def getApiConfig(sessionKey):
       # list all credentials
       entities = entity.getEntities(['admin', 'netatmo_config'], namespace=myapp,
                                     owner='nobody', sessionKey=sessionKey)
-    except Exception, e:
+    except Exception as e:
       raise Exception("Could not get %s credentials from splunk. Error: %s"
                       % (myapp, str(e)))
 
@@ -119,8 +119,8 @@ def postRequest(url, params):
     else:
         params = urlencode(params)
         headers = {"Content-Type" : "application/x-www-form-urlencoded;charset=utf-8"}
-        req = urllib2.Request(url=url, data=params, headers=headers)
-        resp = urllib2.urlopen(req).read()
+        req = urllib.request.Request(url=url, data=params, headers=headers)
+        resp = urllib.request.urlopen(req).read()
     return json.loads(resp)
 
 
@@ -210,7 +210,7 @@ class DeviceList:
 
     def techdata2splunk(self):
         lastD = {}
-        for i,station in self.stations.items():
+        for i,station in list(self.stations.items()):
             logger.debug("Station is: %s" % json.dumps(station, sort_keys=True, indent=4))
 
             module_name = 'unknown'
@@ -220,13 +220,13 @@ class DeviceList:
             if 'dashboard_data' in station:
                 station_dashboard_data = station['dashboard_data']
                 station_meta_data = {"station_name":station['station_name'],"module_name":module_name,"_id":station['_id'],"type":station['type']}
-                lastD[station['_id']] = dict(station_meta_data.items() + station_dashboard_data.items())
+                lastD[station['_id']] = dict(list(station_meta_data.items()) + list(station_dashboard_data.items()))
 
                 for m in station['modules']:
                     if 'dashboard_data' in self.modules[m]:
                         module_dashboard_data = self.modules[m]['dashboard_data']
                         module_meta_data = { "station_name":station['station_name'],"module_name":self.modules[m]['module_name'],"_id":m,"station_id":station['_id'],"type":self.modules[m]['type']}
-                        lastD[m] = dict(module_meta_data.items() + module_dashboard_data.items())
+                        lastD[m] = dict(list(module_meta_data.items()) + list(module_dashboard_data.items()))
                     else:
                         logger.warn("No dashboard_data found for module '{}'. Maybe module is offline!".format(self.modules[m]['module_name']))
             else:

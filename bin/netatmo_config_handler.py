@@ -12,8 +12,8 @@ class ConfigApp(admin.MConfigHandler):
 	def handleList(self, confInfo):
 		confDict = self.readConf("netatmo")
 		if None != confDict:
-			for stanza, settings in confDict.items():
-				for key, val in settings.items():
+			for stanza, settings in list(confDict.items()):
+				for key, val in list(settings.items()):
 					if key in ['client-id', 'client-secret', 'base', 'authorization', 'getuser', 'devicelist', 'getmeasure'] and val in [None, '']:
 						val = ''
 					confInfo[stanza].append(key, val)

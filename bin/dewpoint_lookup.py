@@ -41,7 +41,7 @@ def SDD(T):
 
 def main():
     if len(sys.argv) != 3:
-        print "Usage: dewpoint.py [temperature field] [humidity field]"
+        print("Usage: dewpoint.py [temperature field] [humidity field]")
         sys.exit(1)
 
     temperatureField = sys.argv[1]
